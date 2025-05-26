@@ -31,9 +31,9 @@ public:
     void setAlojamientos(const Alojamiento alojamientos[]);
 
     // Métodos adicionales
-    bool anularReserva(unsigned short codigo);
-    void consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const; // muestra reservas entre esas fechas
-    void actualizarHistorico(unsigned int &fecha) const;  // fecha hoy modificable
+    bool anularReserva(Reserva reserva[]);
+    bool consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const; // muestra reservas entre esas fechas
+    bool actualizarHistorico(unsigned int &fecha) const;  // fecha hoy modificable
 };
 
 #endif // ANFITRION_H

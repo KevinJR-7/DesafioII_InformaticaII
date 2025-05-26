@@ -81,12 +81,25 @@ void Huesped::setReservas(const Reserva reservas[])
 // Métodos adicionales
 bool Huesped::reservar()
 {
-    //
-    return false;
+    // Pide datos basicos par ala reserva (ver en la guía)
+    // Muestra alojamientos que cumplan (itera comparando condiciones) y opción de aplicar filtros
+        // si aplica filtros, muestras nuevas opciones (iterando again)
+    // ingresa la opción el usuario
+    // ingresa datos adicionales para la reserva (ingresa primero datos de validación para set atrbutos uno a la vez)
+    // se rectifica disponibilidad (de huesped y alojameinto)
+    // Busca una reserva vacía y la modifica con los datos ingresados
+    // si todo melo retorna true para afuera hacer el comprobante
+    return true;
 }
 
-bool Huesped::anularReserva(unsigned short codigo)
+bool Huesped::anularReserva()
 {
-    //
-    return false;
+    // muestra por consola al usuario todas las reservas de este huesped (iterar reservas)
+    // recibir un valor(puede ser un codigo de reserva o el numero de reserva mostrada)
+        // una buena opción es conservar un contador de las reservas que se muestran para así acceder a la reserva correcta con un switch o algo
+    /*   Esta primera parte puede estar fuera y enviar el índice o código como parametro   */
+    // reset a esa reserva
+    // cambiar apuntador en alojamiento a nullptr (busca entre los alojamientos uno con el id del alojamiento de la reserva)
+    // retorna true si todo melo;
+    return true;
 }

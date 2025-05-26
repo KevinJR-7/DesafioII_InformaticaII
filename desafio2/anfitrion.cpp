@@ -80,20 +80,26 @@ void Anfitrion::setAlojamientos(const Alojamiento alojamientos[])    // necesari
 }
 
 // Métodos adicionales
-bool Anfitrion::anularReserva(unsigned short codigo)
+bool Anfitrion::anularReserva()
 {
-    //
-    return false;
+    // muestra por consola al usuario todas las reservas de este anfitrion (llamar a consultarReservas con fechas min y max)
+    // recibir un valor(puede ser un codigo de reserva o el numero de reserva mostrada)
+        // una buena opción es conservar un contador de las reservas que se muestran para así acceder a la reserva correcta con un switch (??)
+    /*   Esta primera parte puede estar fuera y enviar el índice o código como parametro   */
+    // reset a esa reserva
+    // cambiar apuntador en alojamiento a nullptr
+    // retorna true si todo melo;
+    return true;
 }
 
-void Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const
+bool Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const
 {
-    // Método sin salida directa por consola
-    // Podría llenarse una estructura de datos con las fechas a consultar
+    // muestra por consola al usuario todas las reservas en estas fechas (itera por las reservas dentro de alojamientos comparando fechas)
+    return true;
 }
 
-void Anfitrion::actualizarHistorico(unsigned int &fecha) const
+bool Anfitrion::actualizarHistorico(unsigned int &fecha) const
 {
-    // Método sin salida directa por consola
-    // Podría modificarse algún atributo relacionado con historial
+    // tengo sueño, luego pienso el paso a paso de este método
+    return true;
 }
