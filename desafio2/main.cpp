@@ -52,10 +52,17 @@ int main() {
 
     // Probar setAlojamientos con una lista más grande
     unsigned short listaAlojamientos2[50];
-    for (int i = 0; i < 49; ++i) {
+    for (unsigned short i = 0; i < 49; i++) {
         listaAlojamientos2[i] = i + 1; // Llenar con 1, 2, ..., 50
     }
     listaAlojamientos2[49] = 0;
+
+    cout << "Prueba: ";
+    for (int i = 0; i < 50; ++i) { // Solo imprimimos los primeros para no saturar
+        cout << listaAlojamientos2[i] << " ";
+    }
+    cout << endl;
+
     anfitrion1.setAlojamientos(listaAlojamientos2);
     cout << "Anfitrion 1 con 50 alojamientos (primeros 5): ";
     const unsigned short* alojamientos1_full = anfitrion1.getAlojamientos();

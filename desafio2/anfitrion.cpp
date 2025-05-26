@@ -1,4 +1,5 @@
 #include "anfitrion.h"
+#include <iostream>
 
 // Constructor
 Anfitrion::Anfitrion() : antiguedad(0), puntuacion(0)
@@ -51,7 +52,7 @@ void Anfitrion::setAlojamientos(const unsigned short alojamientos[])    // neces
     unsigned short i = 0;
     for(i = 0; i < 50; i++)
     {
-        if(id[i] == 0){ break; }
+        if(alojamientos[i] == 0){ break; }
         this->alojamientos[i] = alojamientos[i];
     }
     for(i; i < 50; i++){ this->alojamientos[i] = 0; }
