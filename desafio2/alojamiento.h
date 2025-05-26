@@ -3,16 +3,16 @@
 
 class Alojamiento {
 private:
-    char nombre[100];
+    char* nombre;
     unsigned short id;      // 65,535 es superior a 12,000(max. airbnb en medellín)
-    char anfitrion[15];     // cc o passport number (en emiratos 15char)
-    char departamento[9];   // antioquia
-    char municipio[25];     // San Pedro de los Milagros
+    char* anfitrion;     // cc o passport number (en emiratos 15char)\0
+    char* departamento;   // antioquia \0
+    char* municipio;   // antioquia \0
     bool tipo;              // true = casa, false = apartamento
-    char direccion[100];
+    char* direccion;
     unsigned int precio;    // en airbnb max precio 10millones
-    bool amenidades[20];    // amenidades por definir
-    bool fechas[365];       // Disponibilidad por noches
+    bool* amenidades;    // amenidades por definir
+    bool* fechas;       // Disponibilidad por noches
 
 public:
     Alojamiento();

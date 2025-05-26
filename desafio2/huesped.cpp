@@ -1,3 +1,3 @@
 #include "huesped.h"
 
-huesped::huesped() {}
+Huesped::Huesped() {}
