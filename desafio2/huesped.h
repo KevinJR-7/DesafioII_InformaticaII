@@ -8,7 +8,7 @@ private:
     char* id;                // cc o passport number (en emiratos 15char)
     unsigned short antiguedad; // tiempo en meses en la app
     unsigned short puntuacion;  // puntuacion entre 0 y 50 (pasar a 0 y 5.0)
-    Reserva* reservas; // arreglo con códigos de reservas
+    Reserva* reservas; // arreglo con reservas
 
 public:
     Huesped();
@@ -32,7 +32,7 @@ public:
 
     // Métodos adicionales
     bool reservar();
-    bool anularReserva(unsigned short codigo);
+    bool anularReserva();
 };
 
 #endif // HUESPED_H
