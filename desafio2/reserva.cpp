@@ -17,13 +17,13 @@ Reserva::Reserva(const Reserva &otro)
     codigo = otro.codigo;
     alojamiento = otro.alojamiento;
     unsigned short i = 0;
-    for(i = 0; i < 15; i++){ huesped[i] = otro.huesped[i]; }
+    for(i = 0; i < 16; i++){ huesped[i] = otro.huesped[i]; }
     num_noches = otro.num_noches;
     fecha_i = otro.fecha_i;
     pago = otro.pago;
     fecha_pago = otro.fecha_pago;
     precio = otro.precio;
-    for(i = 0; i < 1000; i++){ comentarios[i] = otro.comentarios[i]; }
+    for(i = 0; i < 1001; i++){ comentarios[i] = otro.comentarios[i]; }
 }
 
 // Destructor
@@ -31,6 +31,32 @@ Reserva::~Reserva()
 {
     delete[] huesped;
     delete[] comentarios;
+}
+
+// Sobreacarga de Operadores
+Reserva& Reserva::operator=(const Reserva& otro) {
+    // evitar a = a;
+    if(this == &otro){ return *this; }
+
+    // liberar los apuntadores dinámicos
+    delete[] huesped;
+    delete[] comentarios;
+
+    huesped = new char[16];
+    comentarios = new char[1001];
+
+    codigo = otro.codigo;
+    alojamiento = otro.alojamiento;
+    unsigned short i = 0;
+    for(i = 0; i < 16; i++){ huesped[i] = otro.huesped[i]; }
+    num_noches = otro.num_noches;
+    fecha_i = otro.fecha_i;
+    pago = otro.pago;
+    fecha_pago = otro.fecha_pago;
+    precio = otro.precio;
+    for(i = 0; i < 1001; i++){ comentarios[i] = otro.comentarios[i]; }
+
+    return *this;
 }
 
 // Getters
