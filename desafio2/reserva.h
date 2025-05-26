@@ -7,7 +7,7 @@ private:
     unsigned short alojamiento; // id alojamiento
     char* huesped;           // cc o passport number (en emiratos 15char)
     unsigned short num_noches;  // Duración de la estancia
-    unsigned int fecha_i;     // fecha inicio (0:4 dia, 5:8 mes, 9:20 año)
+    unsigned int fecha_i;     // DD/MM/AAAA
     bool pago;                  // true = PSE, false = tarjeta
     unsigned int fecha_pago;   // fecha del pago (0:4 dia, 5:8 mes, 9:20 año)
     unsigned int precio;
@@ -17,6 +17,9 @@ public:
     Reserva();
     Reserva(const Reserva &otra);
     ~Reserva();
+
+    // Sobrecarga de operadores
+    Reserva& operator=(const Reserva& otro);
 
     // Getters
     unsigned short getCodigo() const;
