@@ -67,15 +67,15 @@ void Huesped::setId(const char id[])
 }
 void Huesped::setAntiguedad(unsigned short antiguedad){ this->antiguedad = antiguedad; }
 void Huesped::setPuntuacion(unsigned short puntuacion){ this->puntuacion = puntuacion; }
-void Huesped::setReservas(const Reserva reservas[])
+void Huesped::setReservas(const Reserva reservas[])     // asegurar tamaño del arreglo desde fuera!!
 {
     unsigned short i = 0;
     for(i = 0; i < 365; i++)
     {
-        if(reservas[i].getCodigo() == 0){ break; }
+        //if(reservas[i].getCodigo() == 0){ break; }
         this->reservas[i] = reservas[i];
     }
-    for(i; i < 50; i++){ this->reservas[i] = Reserva(); }
+    //for(i; i < 365; i++){ this->reservas[i] = Reserva(); }
 }
 
 // Métodos adicionales
@@ -87,7 +87,7 @@ bool Huesped::reservar()
     // ingresa la opción el usuario
     // ingresa datos adicionales para la reserva (ingresa primero datos de validación para set atrbutos uno a la vez)
     // se rectifica disponibilidad (de huesped y alojameinto)
-    // Busca una reserva vacía y la modifica con los datos ingresados
+    // Busca una reserva vacía y la modifica con los datos ingresados (tanto huesped como alojamiento)
     // si todo melo retorna true para afuera hacer el comprobante
     return true;
 }

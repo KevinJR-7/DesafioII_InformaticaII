@@ -80,7 +80,7 @@ void Anfitrion::setAlojamientos(const Alojamiento alojamientos[])    // necesari
 }
 
 // Métodos adicionales
-bool Anfitrion::anularReserva()
+bool Anfitrion::anularReserva(Reserva reserva[])
 {
     // muestra por consola al usuario todas las reservas de este anfitrion (llamar a consultarReservas con fechas min y max)
     // recibir un valor(puede ser un codigo de reserva o el numero de reserva mostrada)
