@@ -74,7 +74,7 @@ Alojamiento& Alojamiento::operator=(const Alojamiento& otro) {
     direccion = new char[100];
     amenidades = new bool[20];
     fechas = new bool[365];
-    reservas = new Reserva*[50];
+    reservas = new Reserva*[365];
 
     unsigned short i = 0;
     for(i = 0; i < 100; i++){ nombre[i] = otro.nombre[i]; }
@@ -169,13 +169,13 @@ void Alojamiento::setFechas(const bool fechas[])
     unsigned short i = 0;
     for(i = 0; i < 365; i++) this->fechas[i] = fechas[i];
 }
-void Alojamiento::setReservas(Reserva* const reservas[])
+void Alojamiento::setReservas(Reserva* const reservas[])    // rectificar size fuera!!
 {
     unsigned short i = 0;
     for(i = 0; i < 365; i++)
     {
-        if(reservas[i] == nullptr){ break; }    //frena al llegar a arreglo nulo
+        //if(reservas[i] == nullptr){ break; }    //frena al llegar a arreglo nulo
         this->reservas[i] = reservas[i];
     }
-    for(i; i < 365; i++){ this->reservas[i] = nullptr; }
+    //for(i; i < 365; i++){ this->reservas[i] = nullptr; }
 }

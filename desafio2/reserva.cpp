@@ -64,7 +64,7 @@ unsigned short Reserva::getCodigo() const { return codigo; }
 unsigned short Reserva::getIdAlojamiento() const { return alojamiento; }
 const char* Reserva::getIdHuesped() const { return huesped; }
 unsigned short Reserva::getNumNoches() const { return num_noches; }
-unsigned int Reserva::getFechaInicio() const { return fecha_i; }
+unsigned int Reserva::getFechaInicio() const { return fecha_i; } //
 bool Reserva::getMetodoPago() const { return pago; }
 unsigned int Reserva::getFechaPago() const { return fecha_pago; }
 unsigned int Reserva::getPrecio() const { return precio; }

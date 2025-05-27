@@ -67,19 +67,19 @@ void Huesped::setId(const char id[])
 }
 void Huesped::setAntiguedad(unsigned short antiguedad){ this->antiguedad = antiguedad; }
 void Huesped::setPuntuacion(unsigned short puntuacion){ this->puntuacion = puntuacion; }
-void Huesped::setReservas(const Reserva reservas[])
+void Huesped::setReservas(const Reserva reservas[])     // asegurar tamaño del arreglo desde fuera!!
 {
     unsigned short i = 0;
     for(i = 0; i < 365; i++)
     {
-        if(reservas[i].getCodigo() == 0){ break; }
+        //if(reservas[i].getCodigo() == 0){ break; }
         this->reservas[i] = reservas[i];
     }
-    for(i; i < 50; i++){ this->reservas[i] = Reserva(); }
+    //for(i; i < 365; i++){ this->reservas[i] = Reserva(); }
 }
 
 // Métodos adicionales
-bool Huesped::reservar()
+unsigned short Huesped::reservar()
 {
     // Pide datos basicos par ala reserva (ver en la guía)
     // Muestra alojamientos que cumplan (itera comparando condiciones) y opción de aplicar filtros
@@ -87,12 +87,12 @@ bool Huesped::reservar()
     // ingresa la opción el usuario
     // ingresa datos adicionales para la reserva (ingresa primero datos de validación para set atrbutos uno a la vez)
     // se rectifica disponibilidad (de huesped y alojameinto)
-    // Busca una reserva vacía y la modifica con los datos ingresados
+    // Busca una reserva vacía y la modifica con los datos ingresados (tanto huesped como alojamiento)
     // si todo melo retorna true para afuera hacer el comprobante
-    return true;
+    return 0;
 }
 
-bool Huesped::anularReserva()
+unsigned short Huesped::anularReserva()
 {
     // muestra por consola al usuario todas las reservas de este huesped (iterar reservas)
     // recibir un valor(puede ser un codigo de reserva o el numero de reserva mostrada)
@@ -101,5 +101,5 @@ bool Huesped::anularReserva()
     // reset a esa reserva
     // cambiar apuntador en alojamiento a nullptr (busca entre los alojamientos uno con el id del alojamiento de la reserva)
     // retorna true si todo melo;
-    return true;
+    return 0;
 }

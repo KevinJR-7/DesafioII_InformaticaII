@@ -1,137 +1,241 @@
 #include <iostream>
-#include "alojamiento.h" // Asumiendo alojamiento.h en el mismo directorio
-#include "reserva.h"     // Asumiendo reserva.h en el mismo directorio
 
-// Función para imprimir detalles de una reserva (para facilitar la visualización)
-void imprimirReserva(const Reserva* r, const char* prefix = "") {
+// Incluir todas las cabeceras necesarias para las clases
+#include "reserva.h"
+#include "alojamiento.h"
+#include "anfitrion.h" // La clase principal a probar
+
+// --- Constantes para tamaños (se asumen de las clases .h) ---
+const unsigned short ID_ANFITRION_SIZE = 16;
+const unsigned short NOMBRE_ALOJAMIENTO_SIZE = 100;
+const unsigned short MAX_ALOJAMIENTOS_ANFITRION = 50; // De Anfitrion::alojamientos
+const unsigned short MAX_RESERVAS_ALOJAMIENTO = 365; // De Alojamiento::reservas
+const unsigned short ID_HUESPED_SIZE = 16; // De Reserva::huesped
+
+// --- Funciones Auxiliares de Impresión (sin cstring.h) ---
+
+// Imprime un array de char de tamaño fijo, asumiendo terminación nula o tamaño máximo
+void imprimirCharArray(const char* arr, unsigned short size) {
+    if (arr == nullptr) {
+        std::cout << "[nullptr]";
+        return;
+    }
+    for (unsigned short i = 0; i < size; ++i) {
+        if (arr[i] == '\0') {
+            break;
+        }
+        std::cout << arr[i];
+    }
+}
+
+// Imprime una fecha (formato YYYYMMDD)
+void imprimirFecha(unsigned int fecha) {
+    unsigned int anio = fecha / 10000;
+    unsigned int mes = (fecha / 100) % 100;
+    unsigned int dia = fecha % 100;
+    std::cout << anio;
+    if (mes < 10) std::cout << "0";
+    std::cout << mes;
+    if (dia < 10) std::cout << "0";
+    std::cout << dia;
+}
+
+// Imprime detalles de una Reserva (usado por consultarReservas)
+void mostrarReserva(const Reserva* r, const char* prefix = "") {
     if (r == nullptr) {
         std::cout << prefix << "Reserva: nullptr\n";
         return;
     }
-    std::cout << prefix << "Reserva en dirección: " << r << std::endl;
-    std::cout << prefix << "  Codigo: " << r->getCodigo() << std::endl;
-    std::cout << prefix << "  Huesped: ";
-    const char* huesped = r->getIdHuesped();
-    for (unsigned short i = 0; i < 16 && huesped[i] != '\0'; ++i) {
-        std::cout << huesped[i];
-    }
+    std::cout << prefix << "Codigo: " << r->getCodigo();
+    std::cout << ", Alojamiento ID: " << r->getIdAlojamiento();
+    std::cout << ", Huesped ID: "; imprimirCharArray(r->getIdHuesped(), ID_HUESPED_SIZE);
+    std::cout << ", Fecha Inicio: "; imprimirFecha(r->getFechaInicio());
+    std::cout << ", Noches: " << r->getNumNoches();
+    std::cout << ", Precio: " << r->getPrecio();
     std::cout << std::endl;
-    std::cout << prefix << "  Num Noches: " << r->getNumNoches() << std::endl;
 }
 
-// Función para imprimir las reservas de un Alojamiento
-void imprimirReservasAlojamiento(const Alojamiento& a, const char* titulo) {
-    std::cout << "\n--- " << titulo << " ---\n";
-    std::cout << "ID Alojamiento: " << a.getId() << std::endl;
-    const Reserva* const* reservas = a.getReservas();
-    bool hayReservas = false;
-    for (unsigned short i = 0; i < 365; ++i) {
-        if (reservas[i] != nullptr) {
-            hayReservas = true;
-            std::cout << "  reservas[" << i << "]: ";
-            imprimirReserva(reservas[i], "    ");
-        }
-    }
-    if (!hayReservas) {
-        std::cout << "  No hay reservas activas en este alojamiento.\n";
-    }
-    std::cout << "---------------------\n";
-}
-
+// --- MAIN para probar Anfitrion::consultarReservas() ---
 int main() {
-    std::cout << "--- Prueba de Alojamiento y Reservas (Copia Superficial) ---\n";
+    std::cout << "--- Prueba de Anfitrion::consultarReservas() ---\n\n";
 
-    // 1. Crear algunas instancias de Reserva
-    std::cout << "\n1. Creando objetos Reserva originales:\n";
-    Reserva* r1 = new Reserva();
-    r1->setCodigo(101);
-    char huesped1[16] = {'J', 'u', 'a', 'n', '\0'};
-    r1->setIdHuesped(huesped1);
-    r1->setNumNoches(5);
-    imprimirReserva(r1, "  ");
+    // 1. Crear un Anfitrion de prueba
+    Anfitrion anfitrionPrueba;
+    char idAnfitrion[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '0', '0', '7', '\0'};
+    anfitrionPrueba.setId(idAnfitrion);
+    anfitrionPrueba.setAntiguedad(36);
+    anfitrionPrueba.setPuntuacion(48);
+    std::cout << "Anfitrion de prueba creado con ID: ";
+    imprimirCharArray(anfitrionPrueba.getId(), ID_ANFITRION_SIZE);
+    std::cout << std::endl;
 
-    Reserva* r2 = new Reserva();
-    r2->setCodigo(102);
-    char huesped2[16] = {'M', 'a', 'r', 'i', 'a', '\0'};
-    r2->setIdHuesped(huesped2);
-    r2->setNumNoches(3);
-    imprimirReserva(r2, "  ");
+    // 2. Crear objetos Alojamiento y Reservas para el Anfitrion
+    // Necesitamos un array temporal de Alojamientos para pasar a Anfitrion::setAlojamientos
+    // Alojamiento tempAlojamientos[MAX_ALOJAMIENTOS_ANFITRION];
 
-    Reserva* r3 = new Reserva();
-    r3->setCodigo(103);
-    char huesped3[16] = {'P', 'e', 'd', 'r', 'o', '\0'};
-    r3->setIdHuesped(huesped3);
-    r3->setNumNoches(7);
-    imprimirReserva(r3, "  ");
+    // // --- Alojamiento 1 ---
+    // Alojamiento alj1;
+    // alj1.setId(101);
+    // char nombreAlj1[NOMBRE_ALOJAMIENTO_SIZE] = {'C', 'a', 's', 'a', ' ', 'P', 'l', 'a', 'y', 'a', '\0'};
+    // alj1.setNombre(nombreAlj1);
 
-    Reserva* r4 = new Reserva();
-    r4->setCodigo(104);
-    char huesped4[16] = {'L', 'a', 'u', 'r', 'a', '\0'};
-    r4->setIdHuesped(huesped4);
-    r4->setNumNoches(2);
-    imprimirReserva(r4, "  ");
+    // // Crear Reservas para Alojamiento 1
+    // // Reserva* reservasAlj1[MAX_RESERVAS_ALOJAMIENTO];
+    // // for (unsigned short i = 0; i < MAX_RESERVAS_ALOJAMIENTO; ++i) {
+    // //     reservasAlj1[i] = nullptr; // Inicializar a nullptr
+    // // }
 
-    // 2. Crear un array de punteros a Reserva para pasar a Alojamiento
-    // Este array simula el origen de tus reservas.
-    // Los punteros nullptr marcan el fin de las reservas "útiles" en este contexto.
-    Reserva* misReservasParaSet[365] = {nullptr};
-    misReservasParaSet[0] = r1;
-    misReservasParaSet[1] = r2;
-    misReservasParaSet[5] = r3; // Saltar algunas posiciones
-    misReservasParaSet[300] = r4; // Otra posición distante
-    // misReservasParaSet[2] = nullptr; // Si hubiera un nullptr intermedio, setReservas se frenaría allí.
+    // // // Reserva 1.1 (dentro del rango)
+    // // Reserva* res1_1 = new Reserva();
+    // // res1_1->setCodigo(1001);
+    // // res1_1->setIdAlojamiento(101);
+    // // res1_1->setFechaInicio(20250715); // 15 de Julio de 2025
+    // // res1_1->setNumNoches(5);
+    // // char huesped1_1[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '1', '\0'}; res1_1->setIdHuesped(huesped1_1);
+    // // reservasAlj1[0] = res1_1;
 
-    // 3. Crear una instancia de Alojamiento y asignarle las reservas
-    std::cout << "\n2. Creando Alojamiento y asignando reservas (copia superficial):\n";
-    Alojamiento albergue;
-    albergue.setId(1);
-    char nombreAlbergue[100] = {'C', 'a', 's', 'a', ' ', 'd', 'e', 'l', ' ', 'S', 'o', 'l', '\0'};
-    albergue.setNombre(nombreAlbergue);
-    // Ahora setReservas ya no toma 'cantidad', se asume que usa el tamaño fijo 365
-    // y se detiene en el primer nullptr, como tu implementación indica.
-    albergue.setReservas(misReservasParaSet);
-    imprimirReservasAlojamiento(albergue, "Reservas en Albergue Original");
+    // // // Reserva 1.2 (fuera del rango - muy temprana)
+    // // Reserva* res1_2 = new Reserva();
+    // // res1_2->setCodigo(1002);
+    // // res1_2->setIdAlojamiento(101);
+    // // res1_2->setFechaInicio(20250101); // 01 de Enero de 2025
+    // // res1_2->setNumNoches(7);
+    // // char huesped1_2[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '2', '\0'}; res1_2->setIdHuesped(huesped1_2);
+    // // reservasAlj1[1] = res1_2;
 
-    // 4. Probar el constructor de copia de Alojamiento
-    std::cout << "\n3. Probando constructor de copia de Alojamiento (copia superficial de punteros):\n";
-    Alojamiento albergueCopia = albergue; // Llama al constructor de copia
-    char nombreAlbergueCopia[100] = {'C', 'o', 'p', 'i', 'a', ' ', 'd', 'e', 'l', ' ', 'A', 'l', 'b', 'e', 'r', 'g', 'u', 'e', '\0'};
-    albergueCopia.setNombre(nombreAlbergueCopia); // Cambiar un atributo que no sea reserva
-    imprimirReservasAlojamiento(albergueCopia, "Reservas en Albergue Copia");
+    // // // Reserva 1.3 (dentro del rango)
+    // // Reserva* res1_3 = new Reserva();
+    // // res1_3->setCodigo(1003);
+    // // res1_3->setIdAlojamiento(101);
+    // // res1_3->setFechaInicio(20250820); // 20 de Agosto de 2025
+    // // res1_3->setNumNoches(3);
+    // // char huesped1_3[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '3', '\0'}; res1_3->setIdHuesped(huesped1_3);
+    // // reservasAlj1[2] = res1_3;
 
-    // Observar que las direcciones de los objetos Reserva son las mismas
-    std::cout << "\n4. Verificando que los punteros apuntan a las mismas Reservas:\n";
-    std::cout << "  Direccion r1: " << r1 << std::endl;
-    std::cout << "  Direccion albergue.getReservas()[0]: " << albergue.getReservas()[0] << std::endl;
-    std::cout << "  Direccion albergueCopia.getReservas()[0]: " << albergueCopia.getReservas()[0] << std::endl;
+    // // // Reserva 1.4 (fuera del rango - muy tardía)
+    // // Reserva* res1_4 = new Reserva();
+    // // res1_4->setCodigo(1004);
+    // // res1_4->setIdAlojamiento(101);
+    // // res1_4->setFechaInicio(20260101); // 01 de Enero de 2026
+    // // res1_4->setNumNoches(10);
+    // // char huesped1_4[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '4', '\0'}; res1_4->setIdHuesped(huesped1_4);
+    // // reservasAlj1[3] = res1_4;
 
-    // 5. Modificar un objeto Reserva original y ver si se refleja en ambos Alojamientos
-    std::cout << "\n5. Modificando r1 (original) y observando cambios en ambos alojamientos:\n";
-    r1->setNumNoches(10); // Modificamos r1
-    char nuevoHuesped1[16] = {'A', 'n', 'a', '\0'};
-    r1->setIdHuesped(nuevoHuesped1);
-    imprimirReserva(r1, "  r1 modificado: ");
+    // // alj1.setReservas(reservasAlj1); // Asignar el array de punteros a Reservas al Alojamiento
 
-    imprimirReservasAlojamiento(albergue, "Albergue Original despues de modificar r1");
-    imprimirReservasAlojamiento(albergueCopia, "Albergue Copia despues de modificar r1");
+    // // Asignar Alojamiento 1 al array temporal para Anfitrion
+    // tempAlojamientos[0] = alj1; // Llama al operador de asignación de Alojamiento (copia profunda de sus miembros de char*, pero superficial de Reserva**)
 
-    // ¡¡¡Peligro!!! Liberar los objetos Reserva originales
-    // Esto ilustra el problema de los punteros colgantes si los Alojamientos no poseen las Reservas.
-    std::cout << "\n6. !!! DANGER: Liberando los objetos Reserva originales !!!\n";
-    std::cout << "   Despues de esto, los punteros en Alojamiento seran punteros colgantes.\n";
-    delete r1;
-    delete r2;
-    delete r3;
-    delete r4;
-    r1 = nullptr; r2 = nullptr; r3 = nullptr; r4 = nullptr;
+    // // --- Alojamiento 2 ---
+    // Alojamiento alj2;
+    // alj2.setId(202);
+    // char nombreAlj2[NOMBRE_ALOJAMIENTO_SIZE] = {'C', 'a', 'b', 'a', 'n', 'a', ' ', 'M', 'o', 'n', 't', 'a', 'n', 'a', '\0'};
+    // alj2.setNombre(nombreAlj2);
 
-    // Intentar acceder a ellos ahora resultaría en comportamiento indefinido.
-    // No accederemos a ellos para evitar un crash inmediato en la demostración.
+    // Reserva* reservasAlj2[MAX_RESERVAS_ALOJAMIENTO];
+    // for (unsigned short i = 0; i < MAX_RESERVAS_ALOJAMIENTO; ++i) {
+    //     reservasAlj2[i] = nullptr;
+    // }
 
-    std::cout << "\n7. Destruyendo objetos Alojamiento (sus destructores se llaman automaticamente).\n";
-    // Cuando 'albergue' y 'albergueCopia' salgan del scope, sus destructores se llamarán.
-    // Tus destructores SÓLO liberan el array de punteros, NO los objetos Reserva,
-    // lo cual es consistente con la copia superficial.
+    // // Reserva 2.1 (dentro del rango)
+    // Reserva* res2_1 = new Reserva();
+    // res2_1->setCodigo(2001);
+    // res2_1->setIdAlojamiento(202);
+    // res2_1->setFechaInicio(20250910); // 10 de Septiembre de 2025
+    // res2_1->setNumNoches(2);
+    // char huesped2_1[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '5', '\0'}; res2_1->setIdHuesped(huesped2_1);
+    // reservasAlj2[0] = res2_1;
+
+    // alj2.setReservas(reservasAlj2);
+    // tempAlojamientos[1] = alj2; // Asignar Alojamiento 2
+
+    // // Finalizar el array de alojamientos con un Alojamiento "nulo" (ID 0)
+    // // tal como se espera en Anfitrion::setAlojamientos y Anfitrion::consultarReservas
+    // Alojamiento nuloAlj; // Su constructor ya pone id=0
+    // tempAlojamientos[2] = nuloAlj; // Copia el Alojamiento con ID 0
+
+    // anfitrionPrueba.setAlojamientos(tempAlojamientos);
+
+    std::cout << "\nAnfitrion de prueba configurado con 2 alojamientos y varias reservas.\n";
+    std::cout << "--------------------------------------------------------\n";
+
+    // 3. Probar consultarReservas() con diferentes rangos de fechas
+    unsigned int fecha_inicio_busqueda, fecha_fin_busqueda;
+    unsigned short num_reservas_encontradas;
+
+    std::cout << "\n--- Prueba 1: Rango que incluye varias reservas ---\n";
+    fecha_inicio_busqueda = 20250701; // 1 de Julio de 2025
+    fecha_fin_busqueda = 20251001;   // 1 de Octubre de 2025 (exclusiva)
+    std::cout << "Buscando reservas entre "; imprimirFecha(fecha_inicio_busqueda);
+    std::cout << " y "; imprimirFecha(fecha_fin_busqueda); std::cout << std::endl;
+
+    num_reservas_encontradas = anfitrionPrueba.consultarReservas(fecha_inicio_busqueda, fecha_fin_busqueda);
+
+    if (num_reservas_encontradas == 0) {
+        std::cout << "  Resultado: 0 reservas encontradas (OK)\n";
+    } else if (num_reservas_encontradas == 1) {
+        std::cout << "  Resultado: Error de estado, se esperaba un conteo de reservas.\n";
+    } else if (num_reservas_encontradas == 2) {
+        std::cout << "  Resultado: No hay reservas activas en este anfitrion (ERROR - si esperamos reservas).\n";
+    } else {
+        std::cout << "  Numero de reservas encontradas: " << num_reservas_encontradas << std::endl;
+        std::cout << "  (Las reservas se imprimen dentro del metodo consultarReservas)\n";
+    }
+
+    std::cout << "\n--- Prueba 2: Rango sin reservas ---\n";
+    fecha_inicio_busqueda = 20250401; // 1 de Abril de 2025
+    fecha_fin_busqueda = 20250501;   // 1 de Mayo de 2025
+    std::cout << "Buscando reservas entre "; imprimirFecha(fecha_inicio_busqueda);
+    std::cout << " y "; imprimirFecha(fecha_fin_busqueda); std::cout << std::endl;
+
+    num_reservas_encontradas = anfitrionPrueba.consultarReservas(fecha_inicio_busqueda, fecha_fin_busqueda);
+
+    if (num_reservas_encontradas == 0) {
+        std::cout << "  Resultado: " << 0 << " reservas encontradas. Esto esta bien si la funcion retorna 0 para exito.\n";
+        // Si tu funcion devuelve 2 para "no hay reservas", entonces este es el resultado esperado.
+    } else if (num_reservas_encontradas == 1) {
+        std::cout << "  Resultado: Error de estado (retorno 1).\n";
+    } else if (num_reservas_encontradas == 2) {
+        std::cout << "  Resultado: No hay reservas en el rango (OK).\n";
+    } else {
+        std::cout << "  Numero de reservas encontradas: " << num_reservas_encontradas << std::endl;
+    }
+
+    std::cout << "\n--- Prueba 3: Rango con una sola reserva --- \n";
+    fecha_inicio_busqueda = 20250911; // 1 de Septiembre de 2025
+    fecha_fin_busqueda = 20250915;   // 15 de Septiembre de 2025
+    std::cout << "Buscando reservas entre "; imprimirFecha(fecha_inicio_busqueda);
+    std::cout << " y "; imprimirFecha(fecha_fin_busqueda); std::cout << std::endl;
+
+    num_reservas_encontradas = anfitrionPrueba.consultarReservas(fecha_inicio_busqueda, fecha_fin_busqueda);
+
+    if (num_reservas_encontradas == 0) {
+        std::cout << "  Resultado: " << 0 << " reservas encontradas. Esto esta bien si la funcion retorna 0 para exito.\n";
+        // Si tu funcion devuelve 2 para "no hay reservas", entonces este es el resultado esperado.
+    } else if (num_reservas_encontradas == 1) {
+        std::cout << "  Resultado: Error de estado (retorno 1).\n";
+    } else if (num_reservas_encontradas == 2) {
+        std::cout << "  Resultado: No hay reservas en el rango (ERROR - si esperamos reservas).\n";
+    } else {
+        std::cout << "  Numero de reservas encontradas: " << num_reservas_encontradas << std::endl;
+    }
+
+
+    // 4. Liberar la memoria de los objetos creados manualmente
+    std::cout << "\n--- Limpieza de memoria ---\n";
+    // Liberar las Reservas creadas manualmente para alj1
+    // delete res1_1; res1_1 = nullptr;
+    // delete res1_2; res1_2 = nullptr;
+    // delete res1_3; res1_3 = nullptr;
+    // delete res1_4; res1_4 = nullptr;
+
+    // Liberar las Reservas creadas manualmente para alj2
+    // delete res2_1; res2_1 = nullptr;
+
+    // Los objetos Alojamiento (alj1, alj2) se copiaron en anfitrionPrueba.setAlojamientos
+    // por lo tanto, no necesitamos eliminarlos aquí, a menos que se hayan creado con new
+    // Si 'alj1' y 'alj2' fueran punteros new Alojamiento(), necesitaríamos eliminarlos aquí.
+    // Como son objetos en el stack, se destruirán automáticamente.
 
     std::cout << "\n--- Fin de la prueba ---\n";
 

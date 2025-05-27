@@ -8,7 +8,7 @@ private:
     char* id;                // cc o passport number (en emiratos 15char)
     unsigned short antiguedad;  // tiempo como anfitrión en meses
     unsigned short puntuacion;  // puntuacion entre 0 y 50 (pasar a 0 y 5.0)
-    Alojamiento* alojamientos;
+    Alojamiento* alojamientos;  // basandose en datos no muy precisos, no creo que un propietario supere las 50 propiedades
 
 public:
     Anfitrion();
@@ -31,9 +31,9 @@ public:
     void setAlojamientos(const Alojamiento alojamientos[]);
 
     // Métodos adicionales
-    bool anularReserva(Reserva reserva[]);
-    bool consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const; // muestra reservas entre esas fechas
-    bool actualizarHistorico(unsigned int &fecha) const;  // fecha hoy modificable
+    unsigned short anularReserva(Reserva reserva[]);
+    unsigned short consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const; // muestra reservas entre esas fechas
+    unsigned short actualizarHistorico(unsigned int &fecha) const;  // fecha hoy modificable
 };
 
 #endif // ANFITRION_H
