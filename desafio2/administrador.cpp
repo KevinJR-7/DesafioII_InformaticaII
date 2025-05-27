@@ -24,7 +24,7 @@ Administrador::~Administrador()
 // Getters
 const Anfitrion* const* Administrador::getAnfitriones() const { return anfitriones; }
 unsigned short Administrador::getIndice() const { return indice; }
-unsigned int Administrador::getFechaHoy() const { return fecha_hoy(); }
+unsigned int Administrador::getFechaHoy() const { return fecha_hoy; }
 
 // Setters
 void Administrador::setAnfitriones(Anfitrion* const anfitriones[])    // rectificar size fuera!!

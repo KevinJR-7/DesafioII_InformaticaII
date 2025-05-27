@@ -7,7 +7,7 @@ private:
     unsigned short alojamiento; // id alojamiento
     char* huesped;           // cc o passport number (en emiratos 15char)
     unsigned short num_noches;  // Duración de la estancia
-    unsigned int fecha_i;     // DD/MM/AAAA
+    unsigned int fecha_i;     // AAAA/MM/DD
     bool pago;                  // true = PSE, false = tarjeta
     unsigned int fecha_pago;   // fecha del pago (0:4 dia, 5:8 mes, 9:20 año)
     unsigned int precio;

@@ -5,7 +5,7 @@
 Anfitrion::Anfitrion() : antiguedad(0), puntuacion(0)
 {
     id = new char[16]();   //el parentesis inicializa a \0
-    alojamientos = new Alojamiento[50];
+    alojamientos = new Alojamiento[50]();
 }
 
 // Constructor de copia
@@ -80,7 +80,7 @@ void Anfitrion::setAlojamientos(const Alojamiento alojamientos[])    // necesari
 }
 
 // Métodos adicionales
-bool Anfitrion::anularReserva(Reserva reserva[])
+unsigned short Anfitrion::anularReserva(Reserva reserva[])
 {
     // muestra por consola al usuario todas las reservas de este anfitrion (llamar a consultarReservas con fechas min y max)
     // recibir un valor(puede ser un codigo de reserva o el numero de reserva mostrada)
@@ -89,17 +89,41 @@ bool Anfitrion::anularReserva(Reserva reserva[])
     // reset a esa reserva
     // cambiar apuntador en alojamiento a nullptr
     // retorna true si todo melo;
-    return true;
+    return 0;
 }
 
-bool Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const
+unsigned short Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f) const     // rectificar que las fechas están dentro de 12meses
 {
     // muestra por consola al usuario todas las reservas en estas fechas (itera por las reservas dentro de alojamientos comparando fechas)
-    return true;
+    unsigned int fecha_aux = 00000000;
+    unsigned short cnt = 0;
+
+    if(this->alojamientos[0].getId() == 0){ return 1; }
+    for(unsigned short i = 0; i < 50; i++)
+    {
+        if(this->alojamientos[i].getId() == 0){ break; }
+        for(unsigned short j = 0; j < 365; j++)
+        {
+            if(this->alojamientos[i].getReservas()[j] != nullptr)
+            {
+                fecha_aux = this->alojamientos[i].getReservas()[j]->getFechaInicio();
+                if((fecha_aux > fecha_i) && (fecha_aux < fecha_f))
+                {
+                    //mostrarReserva(this->alojamientos[i].getReservas()[j])
+                    unsigned short code = this->alojamientos[i].getReservas()[j]->getCodigo();
+                    std::cout << "Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;
+                    // si queda tiempo, implementar un organizador en orden de fechas de los indices para imprimir en orden
+                    cnt++;
+                }
+            }
+        }
+    }
+    if(cnt == 0){ return 2; }
+    else{ return 0; }
 }
 
-bool Anfitrion::actualizarHistorico(unsigned int &fecha) const
+unsigned short Anfitrion::actualizarHistorico(unsigned int &fecha) const
 {
     // tengo sueño, luego pienso el paso a paso de este método
-    return true;
+    return 0;
 }

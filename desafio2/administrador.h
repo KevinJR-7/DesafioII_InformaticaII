@@ -8,7 +8,7 @@ private:
     Anfitrion** anfitriones;    // en airbnb hay aprox 2000 anfitriones
     //Huesped** huespedes;      //
     unsigned short indice;      // indice en proximo anfitrión vacío
-    unsigned int fecha_hoy;
+    unsigned int fecha_hoy;     // AAAA/MM/DD
 
 public:
     Administrador();

@@ -31,8 +31,8 @@ public:
     void setReservas(const Reserva reservas[]);
 
     // Métodos adicionales
-    bool reservar();
-    bool anularReserva();
+    unsigned short reservar();
+    unsigned short anularReserva();
 };
 
 #endif // HUESPED_H

@@ -1,19 +1,18 @@
 #include <iostream>
 
-// Incluir todas las cabeceras necesarias
-#include "administrador.h" // Contiene Administrador
-#include "anfitrion.h"     // Contiene Anfitrion
-#include "alojamiento.h"   // Contiene Alojamiento
-#include "reserva.h"       // Contiene Reserva
+// Incluir todas las cabeceras necesarias para las clases
+#include "reserva.h"
+#include "alojamiento.h"
+#include "anfitrion.h" // La clase principal a probar
 
 // --- Constantes para tamaños (se asumen de las clases .h) ---
-const unsigned short MAX_ANFITRIONES = 2000; // De Administrador::anfitriones
-const unsigned short ID_ANFITRION_SIZE = 16; // De Anfitrion::id
-const unsigned short NOMBRE_SIZE = 100;      // De Alojamiento::nombre
-const unsigned short EMAIL_SIZE = 50;        // Asumido para Anfitrion::email (no en tu snippet, pero común)
-const unsigned short MAX_ALOJAMIENTOS_ANFITRION = 50; // De Anfitrion::alojamientos (asumido)
+const unsigned short ID_ANFITRION_SIZE = 16;
+const unsigned short NOMBRE_ALOJAMIENTO_SIZE = 100;
+const unsigned short MAX_ALOJAMIENTOS_ANFITRION = 50; // De Anfitrion::alojamientos
+const unsigned short MAX_RESERVAS_ALOJAMIENTO = 365; // De Alojamiento::reservas
+const unsigned short ID_HUESPED_SIZE = 16; // De Reserva::huesped
 
-// --- Funciones Auxiliares para Imprimir (sin cstring) ---
+// --- Funciones Auxiliares de Impresión (sin cstring.h) ---
 
 // Imprime un array de char de tamaño fijo, asumiendo terminación nula o tamaño máximo
 void imprimirCharArray(const char* arr, unsigned short size) {
@@ -22,246 +21,221 @@ void imprimirCharArray(const char* arr, unsigned short size) {
         return;
     }
     for (unsigned short i = 0; i < size; ++i) {
-        if (arr[i] == '\0') { // Se detiene si encuentra un terminador nulo
+        if (arr[i] == '\0') {
             break;
         }
         std::cout << arr[i];
     }
 }
 
-// Imprime detalles de una Reserva (repetido del test de Alojamiento para referencia)
-void imprimirReserva(const Reserva* r, const char* prefix = "") {
+// Imprime una fecha (formato YYYYMMDD)
+void imprimirFecha(unsigned int fecha) {
+    unsigned int anio = fecha / 10000;
+    unsigned int mes = (fecha / 100) % 100;
+    unsigned int dia = fecha % 100;
+    std::cout << anio;
+    if (mes < 10) std::cout << "0";
+    std::cout << mes;
+    if (dia < 10) std::cout << "0";
+    std::cout << dia;
+}
+
+// Imprime detalles de una Reserva (usado por consultarReservas)
+void mostrarReserva(const Reserva* r, const char* prefix = "") {
     if (r == nullptr) {
         std::cout << prefix << "Reserva: nullptr\n";
         return;
     }
-    std::cout << prefix << "Reserva en direccion: " << r << std::endl;
-    std::cout << prefix << "  Codigo: " << r->getCodigo() << std::endl;
-    std::cout << prefix << "  Huesped: ";
-    imprimirCharArray(r->getIdHuesped(), 16); // Asumiendo tamaño 16 para huesped
+    std::cout << prefix << "Codigo: " << r->getCodigo();
+    std::cout << ", Alojamiento ID: " << r->getIdAlojamiento();
+    std::cout << ", Huesped ID: "; imprimirCharArray(r->getIdHuesped(), ID_HUESPED_SIZE);
+    std::cout << ", Fecha Inicio: "; imprimirFecha(r->getFechaInicio());
+    std::cout << ", Noches: " << r->getNumNoches();
+    std::cout << ", Precio: " << r->getPrecio();
     std::cout << std::endl;
-    std::cout << prefix << "  Num Noches: " << r->getNumNoches() << std::endl;
 }
 
-// Imprime las reservas de un Alojamiento (adaptado del test de Alojamiento)
-void imprimirReservasAlojamiento(const Alojamiento* a, const char* titulo) {
-    if (a == nullptr) {
-        std::cout << "\n--- " << titulo << " (Alojamiento nulo) ---\n";
-        return;
-    }
-    std::cout << "\n--- " << titulo << " ---\n";
-    std::cout << "  ID Alojamiento: " << a->getId() << std::endl;
-    const Reserva* const* reservas = a->getReservas();
-    bool hayReservas = false;
-    for (unsigned short i = 0; i < 365; ++i) { // Tamaño fijo 365 de Alojamiento::reservas
-        if (reservas[i] != nullptr) {
-            hayReservas = true;
-            std::cout << "    reservas[" << i << "]: ";
-            imprimirReserva(reservas[i], "      ");
-        }
-    }
-    if (!hayReservas) {
-        std::cout << "    No hay reservas activas en este alojamiento.\n";
-    }
-    std::cout << "---------------------\n";
-}
-
-// Imprime detalles de un Alojamiento (para Anfitrion)
-void imprimirAlojamiento(const Alojamiento* al, const char* prefix = "  ") {
-    if (al == nullptr) {
-        std::cout << prefix << "Alojamiento: nullptr\n";
-        return;
-    }
-    std::cout << prefix << "Alojamiento en direccion: " << al << std::endl;
-    std::cout << prefix << "  ID: " << al->getId() << std::endl;
-    std::cout << prefix << "  Nombre: "; imprimirCharArray(al->getNombre(), NOMBRE_SIZE); std::cout << std::endl;
-    // Puedes añadir más detalles si lo deseas
-    imprimirReservasAlojamiento(al, "Reservas del Alojamiento anterior"); // Muestra sus reservas
-}
-
-// Imprime detalles de un Anfitrion
-void imprimirAnfitrion(const Anfitrion* a, const char* prefix = "  ") {
-    if (a == nullptr) {
-        std::cout << prefix << "Anfitrion: nullptr\n";
-        return;
-    }
-    std::cout << prefix << "Anfitrion en direccion: " << a << std::endl;
-    std::cout << prefix << "  ID: "; imprimirCharArray(a->getId(), ID_ANFITRION_SIZE); std::cout << std::endl;
-    std::cout << prefix << "  Antiguedad: " << a->getAntiguedad() << " meses" << std::endl;
-    std::cout << prefix << "  Puntuacion: " << a->getPuntuacion() << std::endl;
-
-    // Asumiendo que getAlojamientos() devuelve un puntero al inicio del array de alojamientos
-    const Alojamiento* alojamientosAnfitrion = a->getAlojamientos();
-    if (alojamientosAnfitrion != nullptr) {
-        std::cout << prefix << "  Alojamientos gestionados por este Anfitrion:\n";
-        bool hayAlojamientos = false;
-        // Tendrías que tener una forma de saber cuántos alojamientos tiene el Anfitrion
-        // o si es un array de tamaño fijo (como 50), iterar sobre ese tamaño.
-        // Asumo 50 por la descripción de tu clase.
-        for (unsigned short i = 0; i < MAX_ALOJAMIENTOS_ANFITRION; ++i) {
-            // Se asume que Alojamiento::setAlojamientos copia por valor (profunda)
-            // entonces aqui necesitamos el Alojamiento *en esa posicion* del array
-            // si solo apunta a uno, esta logica de array no aplica.
-            // Dada tu definicion `Alojamiento* alojamientos;` en Anfitrion,
-            // la interpretacion mas comun es que es un solo Alojamiento o el inicio de un array.
-            // Para probar, asumiremos que es el inicio de un array de MAX_ALOJAMIENTOS_ANFITRION.
-            // Si es un solo Alojamiento, solo imprimiríamos 'alojamientosAnfitrion'.
-            if ((alojamientosAnfitrion + i) != nullptr && (alojamientosAnfitrion + i)->getId() != 0) { // Check for valid Alojamiento (non-zero ID as a simple heuristic)
-                hayAlojamientos = true;
-                std::cout << prefix << "    Alojamiento[" << i << "]:\n";
-                imprimirAlojamiento((alojamientosAnfitrion + i), prefix);
-            }
-        }
-        if (!hayAlojamientos) {
-            std::cout << prefix << "    Ningun alojamiento valido listado.\n";
-        }
-    } else {
-        std::cout << prefix << "  No hay alojamientos asociados a este Anfitrion.\n";
-    }
-}
-
-// Imprime los anfitriones gestionados por el Administrador
-void imprimirAnfitrionesAdministrador(const Administrador& admin, const char* titulo) {
-    std::cout << "\n--- " << titulo << " ---\n";
-    std::cout << "Indice actual del Administrador: " << admin.getIndice() << std::endl;
-    const Anfitrion* const* anfitriones = admin.getAnfitriones();
-    bool hayAnfitriones = false;
-    // Iteramos hasta el 'indice' actual para ver los Anfitriones que se han añadido.
-    for (unsigned short i = 0; i < admin.getIndice(); ++i) {
-        if (anfitriones[i] != nullptr) {
-            hayAnfitriones = true;
-            std::cout << "  anfitriones[" << i << "]:\n";
-            imprimirAnfitrion(anfitriones[i], "    "); // Usa la función de impresión de Anfitrion
-        }
-    }
-    if (!hayAnfitriones) {
-        std::cout << "  No hay anfitriones activos en este Administrador.\n";
-    }
-    std::cout << "---------------------\n";
-}
-
+// --- MAIN para probar Anfitrion::consultarReservas() ---
 int main() {
-    std::cout << "--- Prueba de la clase Administrador ---\n";
+    std::cout << "--- Prueba de Anfitrion::consultarReservas() ---\n\n";
 
-    // 1. Crear una instancia de Administrador
-    std::cout << "\n1. Creando Administrador:\n";
-    Administrador gestorGlobal;
-    imprimirAnfitrionesAdministrador(gestorGlobal, "Administrador recien creado");
+    // 1. Crear un Anfitrion de prueba
+    Anfitrion anfitrionPrueba;
+    char idAnfitrion[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '0', '0', '7', '\0'};
+    anfitrionPrueba.setId(idAnfitrion);
+    anfitrionPrueba.setAntiguedad(36);
+    anfitrionPrueba.setPuntuacion(48);
+    std::cout << "Anfitrion de prueba creado con ID: ";
+    imprimirCharArray(anfitrionPrueba.getId(), ID_ANFITRION_SIZE);
+    std::cout << std::endl;
 
-    // 2. Crear algunos objetos Anfitrion de prueba
-    std::cout << "\n2. Creando objetos Anfitrion originales:\n";
-    Anfitrion* anf1 = new Anfitrion();
-    char id1[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '0', '0', '1', '\0'};
-    anf1->setId(id1);
-    anf1->setAntiguedad(12);
-    anf1->setPuntuacion(45);
-    // Para setAlojamientos, necesitarías pasar un array de Alojamiento.
-    // Aquí solo crearemos un Alojamiento de prueba para asociar.
-    Alojamiento* alj1_anf1 = new Alojamiento();
-    alj1_anf1->setId(101);
-    char alj1_nombre[NOMBRE_SIZE] = {'P', 'e', 'q', 'u', 'e', 'n', 'o', ' ', 'A', 'p', 'a', 'r', 't', 'a', 'm', 'e', 'n', 't', 'o', '\0'};
-    alj1_anf1->setNombre(alj1_nombre);
-    // Asignar el Alojamiento al Anfitrion (se espera una copia profunda en Anfitrion::setAlojamientos)
-    Alojamiento tempAlojamientos1[MAX_ALOJAMIENTOS_ANFITRION]; // Array temporal para pasar
-    tempAlojamientos1[0] = *alj1_anf1; // Copia el objeto Alojamiento (llama al constructor de copia de Alojamiento)
-    anf1->setAlojamientos(tempAlojamientos1); // Pasa el array
+    // 2. Crear objetos Alojamiento y Reservas para el Anfitrion
+    // Necesitamos un array temporal de Alojamientos para pasar a Anfitrion::setAlojamientos
+    // Alojamiento tempAlojamientos[MAX_ALOJAMIENTOS_ANFITRION];
 
-    imprimirAnfitrion(anf1, "  ");
+    // // --- Alojamiento 1 ---
+    // Alojamiento alj1;
+    // alj1.setId(101);
+    // char nombreAlj1[NOMBRE_ALOJAMIENTO_SIZE] = {'C', 'a', 's', 'a', ' ', 'P', 'l', 'a', 'y', 'a', '\0'};
+    // alj1.setNombre(nombreAlj1);
 
-    Anfitrion* anf2 = new Anfitrion();
-    char id2[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '0', '0', '2', '\0'};
-    anf2->setId(id2);
-    anf2->setAntiguedad(24);
-    anf2->setPuntuacion(50);
-    imprimirAnfitrion(anf2, "  ");
+    // // Crear Reservas para Alojamiento 1
+    // // Reserva* reservasAlj1[MAX_RESERVAS_ALOJAMIENTO];
+    // // for (unsigned short i = 0; i < MAX_RESERVAS_ALOJAMIENTO; ++i) {
+    // //     reservasAlj1[i] = nullptr; // Inicializar a nullptr
+    // // }
 
-    Anfitrion* anf3 = new Anfitrion();
-    char id3[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '1', '0', '0', '\0'}; // ID para buscar
-    anf3->setId(id3);
-    anf3->setAntiguedad(6);
-    anf3->setPuntuacion(30);
-    imprimirAnfitrion(anf3, "  ");
+    // // // Reserva 1.1 (dentro del rango)
+    // // Reserva* res1_1 = new Reserva();
+    // // res1_1->setCodigo(1001);
+    // // res1_1->setIdAlojamiento(101);
+    // // res1_1->setFechaInicio(20250715); // 15 de Julio de 2025
+    // // res1_1->setNumNoches(5);
+    // // char huesped1_1[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '1', '\0'}; res1_1->setIdHuesped(huesped1_1);
+    // // reservasAlj1[0] = res1_1;
 
-    // 3. Añadir Anfitriones al Administrador usando addObject
-    std::cout << "\n3. Anadiendo Anfitriones al Administrador:\n";
-    gestorGlobal.addObject(anf1);
-    gestorGlobal.addObject(anf2);
-    gestorGlobal.addObject(anf3);
-    imprimirAnfitrionesAdministrador(gestorGlobal, "Administrador despues de addObject");
+    // // // Reserva 1.2 (fuera del rango - muy temprana)
+    // // Reserva* res1_2 = new Reserva();
+    // // res1_2->setCodigo(1002);
+    // // res1_2->setIdAlojamiento(101);
+    // // res1_2->setFechaInicio(20250101); // 01 de Enero de 2025
+    // // res1_2->setNumNoches(7);
+    // // char huesped1_2[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '2', '\0'}; res1_2->setIdHuesped(huesped1_2);
+    // // reservasAlj1[1] = res1_2;
 
-    // 4. Probar la búsqueda de Anfitriones usando searchObject
-    std::cout << "\n4. Probando searchObject:\n";
-    char idBuscado1[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '0', '0', '2', '\0'};
-    std::cout << "  Buscando Anfitrion con ID 'ANF002':\n";
-    Anfitrion* encontrado1 = gestorGlobal.searchObject(idBuscado1);
-    imprimirAnfitrion(encontrado1, "    ");
-    if (encontrado1 != nullptr && encontrado1 == anf2) {
-        std::cout << "    -> Busqueda exitosa (Anfitrion esperado).\n";
+    // // // Reserva 1.3 (dentro del rango)
+    // // Reserva* res1_3 = new Reserva();
+    // // res1_3->setCodigo(1003);
+    // // res1_3->setIdAlojamiento(101);
+    // // res1_3->setFechaInicio(20250820); // 20 de Agosto de 2025
+    // // res1_3->setNumNoches(3);
+    // // char huesped1_3[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '3', '\0'}; res1_3->setIdHuesped(huesped1_3);
+    // // reservasAlj1[2] = res1_3;
+
+    // // // Reserva 1.4 (fuera del rango - muy tardía)
+    // // Reserva* res1_4 = new Reserva();
+    // // res1_4->setCodigo(1004);
+    // // res1_4->setIdAlojamiento(101);
+    // // res1_4->setFechaInicio(20260101); // 01 de Enero de 2026
+    // // res1_4->setNumNoches(10);
+    // // char huesped1_4[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '4', '\0'}; res1_4->setIdHuesped(huesped1_4);
+    // // reservasAlj1[3] = res1_4;
+
+    // // alj1.setReservas(reservasAlj1); // Asignar el array de punteros a Reservas al Alojamiento
+
+    // // Asignar Alojamiento 1 al array temporal para Anfitrion
+    // tempAlojamientos[0] = alj1; // Llama al operador de asignación de Alojamiento (copia profunda de sus miembros de char*, pero superficial de Reserva**)
+
+    // // --- Alojamiento 2 ---
+    // Alojamiento alj2;
+    // alj2.setId(202);
+    // char nombreAlj2[NOMBRE_ALOJAMIENTO_SIZE] = {'C', 'a', 'b', 'a', 'n', 'a', ' ', 'M', 'o', 'n', 't', 'a', 'n', 'a', '\0'};
+    // alj2.setNombre(nombreAlj2);
+
+    // Reserva* reservasAlj2[MAX_RESERVAS_ALOJAMIENTO];
+    // for (unsigned short i = 0; i < MAX_RESERVAS_ALOJAMIENTO; ++i) {
+    //     reservasAlj2[i] = nullptr;
+    // }
+
+    // // Reserva 2.1 (dentro del rango)
+    // Reserva* res2_1 = new Reserva();
+    // res2_1->setCodigo(2001);
+    // res2_1->setIdAlojamiento(202);
+    // res2_1->setFechaInicio(20250910); // 10 de Septiembre de 2025
+    // res2_1->setNumNoches(2);
+    // char huesped2_1[ID_HUESPED_SIZE] = {'H', 'U', 'E', 'S', 'P', '0', '5', '\0'}; res2_1->setIdHuesped(huesped2_1);
+    // reservasAlj2[0] = res2_1;
+
+    // alj2.setReservas(reservasAlj2);
+    // tempAlojamientos[1] = alj2; // Asignar Alojamiento 2
+
+    // // Finalizar el array de alojamientos con un Alojamiento "nulo" (ID 0)
+    // // tal como se espera en Anfitrion::setAlojamientos y Anfitrion::consultarReservas
+    // Alojamiento nuloAlj; // Su constructor ya pone id=0
+    // tempAlojamientos[2] = nuloAlj; // Copia el Alojamiento con ID 0
+
+    // anfitrionPrueba.setAlojamientos(tempAlojamientos);
+
+    std::cout << "\nAnfitrion de prueba configurado con 2 alojamientos y varias reservas.\n";
+    std::cout << "--------------------------------------------------------\n";
+
+    // 3. Probar consultarReservas() con diferentes rangos de fechas
+    unsigned int fecha_inicio_busqueda, fecha_fin_busqueda;
+    unsigned short num_reservas_encontradas;
+
+    std::cout << "\n--- Prueba 1: Rango que incluye varias reservas ---\n";
+    fecha_inicio_busqueda = 20250701; // 1 de Julio de 2025
+    fecha_fin_busqueda = 20251001;   // 1 de Octubre de 2025 (exclusiva)
+    std::cout << "Buscando reservas entre "; imprimirFecha(fecha_inicio_busqueda);
+    std::cout << " y "; imprimirFecha(fecha_fin_busqueda); std::cout << std::endl;
+
+    num_reservas_encontradas = anfitrionPrueba.consultarReservas(fecha_inicio_busqueda, fecha_fin_busqueda);
+
+    if (num_reservas_encontradas == 0) {
+        std::cout << "  Resultado: 0 reservas encontradas (OK)\n";
+    } else if (num_reservas_encontradas == 1) {
+        std::cout << "  Resultado: Error de estado, se esperaba un conteo de reservas.\n";
+    } else if (num_reservas_encontradas == 2) {
+        std::cout << "  Resultado: No hay reservas activas en este anfitrion (ERROR - si esperamos reservas).\n";
     } else {
-        std::cout << "    -> ERROR en busqueda (Anfitrion no encontrado o incorrecto).\n";
+        std::cout << "  Numero de reservas encontradas: " << num_reservas_encontradas << std::endl;
+        std::cout << "  (Las reservas se imprimen dentro del metodo consultarReservas)\n";
     }
 
-    char idBuscado2[ID_ANFITRION_SIZE] = {'A', 'N', 'F', '1', '0', '0', '\0'}; // ID que existe
-    std::cout << "  Buscando Anfitrion con ID 'ANF100':\n";
-    Anfitrion* encontrado2 = gestorGlobal.searchObject(idBuscado2);
-    imprimirAnfitrion(encontrado2, "    ");
-    if (encontrado2 != nullptr && encontrado2 == anf3) {
-        std::cout << "    -> Busqueda exitosa (Anfitrion esperado).\n";
+    std::cout << "\n--- Prueba 2: Rango sin reservas ---\n";
+    fecha_inicio_busqueda = 20250401; // 1 de Abril de 2025
+    fecha_fin_busqueda = 20250501;   // 1 de Mayo de 2025
+    std::cout << "Buscando reservas entre "; imprimirFecha(fecha_inicio_busqueda);
+    std::cout << " y "; imprimirFecha(fecha_fin_busqueda); std::cout << std::endl;
+
+    num_reservas_encontradas = anfitrionPrueba.consultarReservas(fecha_inicio_busqueda, fecha_fin_busqueda);
+
+    if (num_reservas_encontradas == 0) {
+        std::cout << "  Resultado: " << 0 << " reservas encontradas. Esto esta bien si la funcion retorna 0 para exito.\n";
+        // Si tu funcion devuelve 2 para "no hay reservas", entonces este es el resultado esperado.
+    } else if (num_reservas_encontradas == 1) {
+        std::cout << "  Resultado: Error de estado (retorno 1).\n";
+    } else if (num_reservas_encontradas == 2) {
+        std::cout << "  Resultado: No hay reservas en el rango (OK).\n";
     } else {
-        std::cout << "    -> ERROR en busqueda (Anfitrion no encontrado o incorrecto).\n";
+        std::cout << "  Numero de reservas encontradas: " << num_reservas_encontradas << std::endl;
     }
 
-    char idNoExistente[ID_ANFITRION_SIZE] = {'X', 'Y', 'Z', '0', '0', '0', '\0'}; // ID que no existe
-    std::cout << "  Buscando Anfitrion con ID 'XYZ000' (no existente):\n";
-    Anfitrion* noEncontrado = gestorGlobal.searchObject(idNoExistente);
-    imprimirAnfitrion(noEncontrado, "    ");
-    if (noEncontrado == nullptr) {
-        std::cout << "    -> Busqueda exitosa (Anfitrion no encontrado, como se esperaba).\n";
+    std::cout << "\n--- Prueba 3: Rango con una sola reserva --- \n";
+    fecha_inicio_busqueda = 20250911; // 1 de Septiembre de 2025
+    fecha_fin_busqueda = 20250915;   // 15 de Septiembre de 2025
+    std::cout << "Buscando reservas entre "; imprimirFecha(fecha_inicio_busqueda);
+    std::cout << " y "; imprimirFecha(fecha_fin_busqueda); std::cout << std::endl;
+
+    num_reservas_encontradas = anfitrionPrueba.consultarReservas(fecha_inicio_busqueda, fecha_fin_busqueda);
+
+    if (num_reservas_encontradas == 0) {
+        std::cout << "  Resultado: " << 0 << " reservas encontradas. Esto esta bien si la funcion retorna 0 para exito.\n";
+        // Si tu funcion devuelve 2 para "no hay reservas", entonces este es el resultado esperado.
+    } else if (num_reservas_encontradas == 1) {
+        std::cout << "  Resultado: Error de estado (retorno 1).\n";
+    } else if (num_reservas_encontradas == 2) {
+        std::cout << "  Resultado: No hay reservas en el rango (ERROR - si esperamos reservas).\n";
     } else {
-        std::cout << "    -> ERROR en busqueda (Anfitrion inesperadamente encontrado).\n";
+        std::cout << "  Numero de reservas encontradas: " << num_reservas_encontradas << std::endl;
     }
 
-    // 5. Probar el constructor de copia de Administrador
-    std::cout << "\n5. Probando constructor de copia de Administrador:\n";
-    Administrador gestorCopia = gestorGlobal; // Llama al constructor de copia
-    imprimirAnfitrionesAdministrador(gestorCopia, "Administrador Copia");
 
-    // Verificar que los punteros en la copia apuntan a los mismos Anfitriones
-    std::cout << "\n6. Verificando que los punteros apuntan a los mismos Anfitriones:\n";
-    std::cout << "  Direccion anf1: " << anf1 << std::endl;
-    std::cout << "  Direccion gestorGlobal.getAnfitriones()[0]: " << gestorGlobal.getAnfitriones()[0] << std::endl;
-    std::cout << "  Direccion gestorCopia.getAnfitriones()[0]: " << gestorCopia.getAnfitriones()[0] << std::endl;
+    // 4. Liberar la memoria de los objetos creados manualmente
+    std::cout << "\n--- Limpieza de memoria ---\n";
+    // Liberar las Reservas creadas manualmente para alj1
+    // delete res1_1; res1_1 = nullptr;
+    // delete res1_2; res1_2 = nullptr;
+    // delete res1_3; res1_3 = nullptr;
+    // delete res1_4; res1_4 = nullptr;
 
-    // Modificar un Anfitrion original y ver si se refleja en ambos Administradores
-    std::cout << "\n7. Modificando anf1 (original) y observando cambios:\n";
-    anf1->setAntiguedad(36); // Cambiar una propiedad
-    imprimirAnfitrion(anf1, "  anf1 modificado: ");
+    // Liberar las Reservas creadas manualmente para alj2
+    // delete res2_1; res2_1 = nullptr;
 
-    imprimirAnfitrionesAdministrador(gestorGlobal, "Administrador Original despues de modificar anf1");
-    imprimirAnfitrionesAdministrador(gestorCopia, "Administrador Copia despues de modificar anf1");
-
-    // 8. Liberar la memoria de los Alojamiento* creados para los Anfitriones (si los creó en main)
-    // ESTO ES CRÍTICO: Si Anfitrion::setAlojamientos HACE COPIA PROFUNDA,
-    // entonces los 'alj1_anf1' creados aquí son independientes de los que el Anfitrion contiene.
-    // Debes liberarlos aquí.
-    delete alj1_anf1;
-    alj1_anf1 = nullptr;
-
-    // 9. ¡¡¡Peligro!!! Liberar los objetos Anfitrion originales.
-    // Esto ilustra el problema de los punteros colgantes si los Administradores no poseen los Anfitriones.
-    std::cout << "\n10. !!! DANGER: Liberando los objetos Anfitrion originales !!!\n";
-    std::cout << "    Despues de esto, los punteros en Administrador seran punteros colgantes.\n";
-    delete anf1; anf1 = nullptr;
-    delete anf2; anf2 = nullptr;
-    delete anf3; anf3 = nullptr;
-
-    // No intentamos acceder a los objetos Anfitrion a través de gestorGlobal o gestorCopia
-    // después de liberarlos para evitar un crash.
-
-    std::cout << "\n11. Destruyendo objetos Administrador (sus destructores se llaman automaticamente).\n";
-    // Cuando 'gestorGlobal' y 'gestorCopia' salgan del scope, sus destructores se llamarán.
-    // Tus destructores SÓLO liberan el array de punteros, NO los objetos Anfitrion,
-    // lo cual es consistente con la copia superficial de punteros.
+    // Los objetos Alojamiento (alj1, alj2) se copiaron en anfitrionPrueba.setAlojamientos
+    // por lo tanto, no necesitamos eliminarlos aquí, a menos que se hayan creado con new
+    // Si 'alj1' y 'alj2' fueran punteros new Alojamiento(), necesitaríamos eliminarlos aquí.
+    // Como son objetos en el stack, se destruirán automáticamente.
 
     std::cout << "\n--- Fin de la prueba ---\n";
 
