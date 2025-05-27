@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "huesped.h"
 
 // Constructor por defecto
@@ -52,7 +54,7 @@ Huesped& Huesped::operator=(const Huesped& otro) {
 const char* Huesped::getId() const { return id; }
 unsigned short Huesped::getAntiguedad() const { return antiguedad; }
 unsigned short Huesped::getPuntuacion() const { return puntuacion; }
-const Reserva* Huesped::getReservas() const { return reservas; }
+Reserva* Huesped::getReservas() { return reservas; }
 
 // Setters
 void Huesped::setId(const char id[])
@@ -79,7 +81,7 @@ void Huesped::setReservas(const Reserva reservas[])     // asegurar tamaño del 
 }
 
 // Métodos adicionales
-unsigned short Huesped::reservar()
+short Huesped::reservar()
 {
     // Pide datos basicos par ala reserva (ver en la guía)
     // Muestra alojamientos que cumplan (itera comparando condiciones) y opción de aplicar filtros
@@ -92,14 +94,75 @@ unsigned short Huesped::reservar()
     return 0;
 }
 
-unsigned short Huesped::anularReserva()
+short Huesped::anularReserva(Anfitrion* const anfitriones[])
 {
     // muestra por consola al usuario todas las reservas de este huesped (iterar reservas)
-    // recibir un valor(puede ser un codigo de reserva o el numero de reserva mostrada)
-        // una buena opción es conservar un contador de las reservas que se muestran para así acceder a la reserva correcta con un switch o algo
-    /*   Esta primera parte puede estar fuera y enviar el índice o código como parametro   */
-    // reset a esa reserva
-    // cambiar apuntador en alojamiento a nullptr (busca entre los alojamientos uno con el id del alojamiento de la reserva)
-    // retorna true si todo melo;
-    return 0;
+    unsigned int fecha_aux = 00000000;
+    unsigned short cnt = 0;
+
+    for(unsigned short j = 0; j < 365; j++)
+    {
+        if(this->getReservas()[j].getCodigo() != 0)
+        {
+            fecha_aux = this->getReservas()[j].getFechaInicio();
+            cnt++;
+            //mostrarReserva(this->getReservas()[j])
+            unsigned short code = this->getReservas()[j].getCodigo();
+            std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;
+            // si queda tiempo, implementar un organizador en orden de fechas de los indices para imprimir en orden
+        }
+    }
+    if(cnt == 0){ return -1; }
+    unsigned short n = 0;
+    do{
+        // recibir numero de reserva (n segun cnt)
+        n = 1;
+        // cin no funciona correctamente (creashea porque le da la gana)
+        //std::cout << "\nIngrese el numero de la reserva a anular: ";
+        //std::cin >> n; // Lee el número ingresado por el usuario
+    } while(n > cnt);
+    cnt = 0;
+
+    unsigned short j = 0;
+    for(j = 0; j < 365; j++)
+    {
+        if(this->getReservas()[j].getCodigo() != 0)
+        {
+            cnt++;
+            if(cnt == n){ ; break; }
+        }
+    }
+    unsigned short alojamiento = this->getReservas()[j].getIdAlojamiento();
+    unsigned short codigo = this->getReservas()[j].getCodigo();
+    //Reserva* pedro = &this->getReservas()[j];//getCodigo();
+
+    unsigned short alojamiento_aux = 0;
+    unsigned short codigo_aux = 0;
+
+    if(anfitriones[0]->getId() == 0){ return -1; }
+    for(unsigned short i = 0; i < 2000; i++)
+    {
+        if(anfitriones[i]->getId() == 0){ break; }
+        for(unsigned short j = 0; j < 50; j++)
+        {
+            if(anfitriones[i]->getAlojamientos()[j].getId() == 0){ break; }
+            alojamiento_aux = anfitriones[i]->getAlojamientos()[j].getId();
+            if(alojamiento_aux == alojamiento)
+            {
+                for(unsigned short k = 0; k < 365; k++)
+                {
+                    codigo_aux = anfitriones[i]->getAlojamientos()[j].getReservas()[k]->getCodigo();
+                    if(codigo_aux == codigo)
+                    {
+                        //Reserva* juan = anfitriones[i]->getAlojamientos()[j].getReservas()[k];
+                        anfitriones[i]->getAlojamientos()[j].getReservas()[k] = nullptr;
+                        this->getReservas()[j].resetReserva();
+                        //juan = anfitriones[i]->getAlojamientos()[j].getReservas()[k];
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+    return -2;
 }

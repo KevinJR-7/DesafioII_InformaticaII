@@ -42,6 +42,8 @@ public:
     void setFechaPago(unsigned int fecha_pago);
     void setPrecio(unsigned int precio);
     void setComentarios(const char comentarios[]);
+
+    void resetReserva();
 };
 
 #endif // RESERVA_H
