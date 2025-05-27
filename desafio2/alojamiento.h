@@ -36,7 +36,7 @@ public:
     unsigned int getPrecio() const;
     const bool* getAmenidades() const;
     const bool* getFechas() const;
-    const Reserva* const* getReservas() const;  // puntero al arreglo const, punteros a Reserva const
+    Reserva** getReservas();  // puntero al arreglo const, punteros a Reserva const
 
     // Setters
     void setNombre(const char nombre[]);

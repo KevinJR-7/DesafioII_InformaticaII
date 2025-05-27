@@ -72,9 +72,7 @@ const char* Reserva::getComentarios() const { return comentarios; }
 
 // Setters
 void Reserva::setCodigo(unsigned short codigo) { this->codigo = codigo; }
-
 void Reserva::setIdAlojamiento(unsigned short alojamiento) { this->alojamiento = alojamiento; }
-
 void Reserva::setIdHuesped(const char huesped[])
 {
     unsigned short i = 0;
@@ -85,17 +83,11 @@ void Reserva::setIdHuesped(const char huesped[])
     }
     for(i; i < 16; i++){ this->huesped[i] = '\0'; }
 }
-
 void Reserva::setNumNoches(unsigned short num_noches) { this->num_noches = num_noches; }
-
 void Reserva::setFechaInicio(unsigned int fecha_i) { this->fecha_i = fecha_i; }
-
 void Reserva::setMetodoPago(bool pago) { this->pago = pago; }
-
 void Reserva::setFechaPago(unsigned int fecha_pago) { this->fecha_pago = fecha_pago; }
-
 void Reserva::setPrecio(unsigned int precio) { this->precio = precio; }
-
 void Reserva::setComentarios(const char comentarios[])
 {
     unsigned short i = 0;
@@ -105,4 +97,21 @@ void Reserva::setComentarios(const char comentarios[])
         this->comentarios[i] = comentarios[i];
     }
     for(i; i < 1001; i++){ this->comentarios[i] = '\0'; }
+}
+
+void Reserva::resetReserva()
+{
+    // liberar los apuntadores dinámicos
+    delete[] huesped;
+    delete[] comentarios;
+
+    codigo = 0;
+    alojamiento = 0;
+    num_noches = 0;
+    fecha_i = 0;
+    pago = false;
+    fecha_pago = 0;
+    precio = 0;
+    huesped = new char[16]();
+    comentarios = new char[1001]();
 }
