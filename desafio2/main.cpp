@@ -274,7 +274,7 @@ int main() {
             case 2:
                 anfitrionLogueado = iniciarSesionAnfitrion(); // Hay que crear esta función
                 // iniciarSesionAnfitrion() debe retornar un objeto Anfitrion o nullptr
-                if (anfitrionLogueado) { 
+                if (anfitrionLogueado) {
                     menuAnfitrion(anfitrionLogueado); // Hay que crear esta función
                 }
                 break;

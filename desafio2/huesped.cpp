@@ -81,16 +81,53 @@ void Huesped::setReservas(const Reserva reservas[])     // asegurar tamaño del 
 }
 
 // Métodos adicionales
-short Huesped::reservar()
+short Huesped::reservar(Alojamiento& alojamiento, unsigned short codigo,
+    unsigned short num_noches, unsigned int fecha_i, unsigned int fecha_pago)   // fecha pago = fecha hoy
 {
-    // Pide datos basicos par ala reserva (ver en la guía)
+    // Pide datos basicos para la reserva (fecha inicio, numero de días, municipio)
     // Muestra alojamientos que cumplan (itera comparando condiciones) y opción de aplicar filtros
-        // si aplica filtros, muestras nuevas opciones (iterando again)
+        // si aplica filtros, muestra nuevas opciones (iterando again)
     // ingresa la opción el usuario
-    // ingresa datos adicionales para la reserva (ingresa primero datos de validación para set atrbutos uno a la vez)
     // se rectifica disponibilidad (de huesped y alojameinto)
-    // Busca una reserva vacía y la modifica con los datos ingresados (tanto huesped como alojamiento)
-    // si todo melo retorna true para afuera hacer el comprobante
+                /*   Hasta aquí, hacer afuera   */
+    bool pago;
+    char* comentarios = new char[1001];
+    // recibe si tarjeta o que
+    pago = true;    // dummy
+    // recibe comentarios
+    // std::cout << "Ingrese su comentario (máx. 1000 caracteres): ";    // dummy
+    // std::cin.getline(comentarios, 1001);    // dummy
+    // dummy
+    const char* temp = "Me gustaría confirmar una reservación para [fecha y hora] en su establecimiento. Agradecería que la mesa esté ubicada en un área tranquila, preferiblemente con buena iluminación y lejos de la cocina o la entrada principal, si es posible. También quisiera saber si ofrecen opciones en el menú para personas con restricciones alimentarias, ya que uno de los asistentes tiene alergias específicas. Agradecería cualquier recomendación que puedan hacer al respecto. Además, si cuentan con opciones de estacionamiento cercanas, agradecería detalles sobre disponibilidad y tarifas. Espero su confirmación y quedo atento a cualquier información adicional que puedan proporcionar. ¡Gracias!";   // dummy
+    for (size_t i = 0; i < 1000 && temp[i] != '\0'; i++) {   // dummy
+        comentarios[i] = temp[i];
+    }
+    comentarios[1000] = '\0';   // dummy
+    // dummy
+    unsigned short i = 0;
+    for(i = 0; i < 365; i++)
+    {
+        if(this->getReservas()[i].getCodigo() == 0){ break; }
+    }
+    if(i == 365){ return -1;}   // no tiene días libres para reservar
+    unsigned short j = 0;
+    for(j = 0; j < 365; j++)
+    {
+        if(alojamiento.getReservas()[j] == nullptr){ break; }
+    }
+    if(j == 365){ return -2;}   // no tiene días libres para reservar
+
+    this->getReservas()[i].setCodigo(001100);     // dummy (el código se debe generar)
+    this->getReservas()[i].setComentarios(comentarios);     delete[] comentarios;
+    this->getReservas()[i].setFechaInicio(fecha_i);
+    this->getReservas()[i].setFechaPago(fecha_pago);
+    this->getReservas()[i].setIdAlojamiento(alojamiento.getId());
+    this->getReservas()[i].setIdHuesped(this->getId());
+    this->getReservas()[i].setMetodoPago(pago);
+    this->getReservas()[i].setNumNoches(num_noches);
+    this->getReservas()[i].setPrecio((alojamiento.getPrecio())*num_noches);
+    alojamiento.getReservas()[j] = &(this->getReservas()[i]);
+
     return 0;
 }
 
@@ -108,7 +145,7 @@ short Huesped::anularReserva(Anfitrion* const anfitriones[])
             cnt++;
             //mostrarReserva(this->getReservas()[j])
             unsigned short code = this->getReservas()[j].getCodigo();
-            std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;
+            std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;    //dummy
             // si queda tiempo, implementar un organizador en orden de fechas de los indices para imprimir en orden
         }
     }
@@ -116,7 +153,7 @@ short Huesped::anularReserva(Anfitrion* const anfitriones[])
     unsigned short n = 0;
     do{
         // recibir numero de reserva (n segun cnt)
-        n = 1;
+        n = 1;  //dummy
         // cin no funciona correctamente (creashea porque le da la gana)
         //std::cout << "\nIngrese el numero de la reserva a anular: ";
         //std::cin >> n; // Lee el número ingresado por el usuario

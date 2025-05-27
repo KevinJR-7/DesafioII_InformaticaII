@@ -90,6 +90,7 @@ short Anfitrion::anularReserva(unsigned int fecha)  // fecha hoy
     unsigned short n = 0;
     do{
         // recibir numero de reserva (cnt)
+        n = 2;      //dummy
         // cin no funciona correctamente (creashea porque le da la gana)
         //std::cout << "\nIngrese el numero de la reserva a anular: ";
         //std::cin >> n; // Lee el número ingresado por el usuario
@@ -141,7 +142,7 @@ short Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f, u
                     cnt++;
                     //mostrarReserva(this->alojamientos[i].getReservas()[j])
                     unsigned short code = this->alojamientos[i].getReservas()[j]->getCodigo();
-                    std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;
+                    std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;    //dummy
                     // si queda tiempo, implementar un organizador en orden de fechas de los indices para imprimir en orden
                 }
             }
@@ -169,7 +170,7 @@ short Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f) c
                     cnt++;
                     //mostrarReserva(this->alojamientos[i].getReservas()[j])
                     unsigned short code = this->alojamientos[i].getReservas()[j]->getCodigo();
-                    std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;
+                    std::cout << cnt << ". Reserva encontrada el " << fecha_aux << " con codigo: " << code << std::endl;    //dummy
                     // si queda tiempo, implementar un organizador en orden de fechas de los indices para imprimir en orden
                 }
             }
