@@ -71,7 +71,7 @@ unsigned int Reserva::getPrecio() const { return precio; }
 const char* Reserva::getComentarios() const { return comentarios; }
 
 // Setters
-void Reserva::setCodigo(unsigned short codigo) { this->codigo = codigo; }
+void Reserva::setCodigo(unsigned int codigo) { this->codigo = codigo; }
 void Reserva::setIdAlojamiento(unsigned short alojamiento) { this->alojamiento = alojamiento; }
 void Reserva::setIdHuesped(const char huesped[])
 {

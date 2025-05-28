@@ -251,47 +251,47 @@
 
 using namespace std;
 int main() {
-    cargarDatos(); // Funcionalidad I (No debe verla el usuario, solo se carga al inicio)
-                    //Hay que crearla
-    int opcionPrincipal;
-    do {
-        cout << "\n========= UdeAStay Plataforma =========" << std;
-        cout << "1. Iniciar Sesión como Huésped" << std;
-        cout << "2. Iniciar Sesión como Anfitrión" << std;
-        cout << "0. Salir del Sistema" << std;
-        opcionPrincipal = leerEntradaInt("Seleccione una opción: ");
+    // cargarDatos(); // Funcionalidad I (No debe verla el usuario, solo se carga al inicio)
+    //                 //Hay que crearla
+    // int opcionPrincipal;
+    // do {
+    //     cout << "\n========= UdeAStay Plataforma =========" << std;
+    //     cout << "1. Iniciar Sesión como Huésped" << std;
+    //     cout << "2. Iniciar Sesión como Anfitrión" << std;
+    //     cout << "0. Salir del Sistema" << std;
+    //     opcionPrincipal = leerEntradaInt("Seleccione una opción: ");
 
 
-        switch (opcionPrincipal) {
-            case 1:
-                huespedLogueado = iniciarSesionHuesped();  // Hay que crear esta función
-                // iniciarSesionHuesped() debe retornar un objeto Huesped o nullptr
-                if (huespedLogueado) {
-                    menuHuesped(huespedLogueado); // Hay que crear esta función
+    //     switch (opcionPrincipal) {
+    //         case 1:
+    //             huespedLogueado = iniciarSesionHuesped();  // Hay que crear esta función
+    //             // iniciarSesionHuesped() debe retornar un objeto Huesped o nullptr
+    //             if (huespedLogueado) {
+    //                 menuHuesped(huespedLogueado); // Hay que crear esta función
 
-                }
-                break;
-            case 2:
-                anfitrionLogueado = iniciarSesionAnfitrion(); // Hay que crear esta función
-                // iniciarSesionAnfitrion() debe retornar un objeto Anfitrion o nullptr
-                if (anfitrionLogueado) {
-                    menuAnfitrion(anfitrionLogueado); // Hay que crear esta función
-                }
-                break;
-            case 0:
-                std::cout << "Saliendo del sistema UdeAStay..." << std;
-                break;
-            default:
-                std::cout << "Opción no válida. Intente de nuevo." << std;
-                // Mostrar medición de recursos incluso para opción inválida si se desea
-                // iteracionesGlobales = 1; // Por la comparación de la opción
-                // mostrarMedicionRecursos();
-        }
-    } while (opcionPrincipal != 0);
+    //             }
+    //             break;
+    //         case 2:
+    //             anfitrionLogueado = iniciarSesionAnfitrion(); // Hay que crear esta función
+    //             // iniciarSesionAnfitrion() debe retornar un objeto Anfitrion o nullptr
+    //             if (anfitrionLogueado) {
+    //                 menuAnfitrion(anfitrionLogueado); // Hay que crear esta función
+    //             }
+    //             break;
+    //         case 0:
+    //             std::cout << "Saliendo del sistema UdeAStay..." << std;
+    //             break;
+    //         default:
+    //             std::cout << "Opción no válida. Intente de nuevo." << std;
+    //             // Mostrar medición de recursos incluso para opción inválida si se desea
+    //             // iteracionesGlobales = 1; // Por la comparación de la opción
+    //             // mostrarMedicionRecursos();
+    //     }
+    // } while (opcionPrincipal != 0);
 
-    guardarDatos(); // Funcionalidad I (Hay que crearla)
-                    // Guardar los datos antes de salir del sistema
+    // guardarDatos(); // Funcionalidad I (Hay que crearla)
+    //                 // Guardar los datos antes de salir del sistema
 
-    std::cout << "Gracias por usar UdeAStay. ¡Hasta pronto!" << std;
+    // std::cout << "Gracias por usar UdeAStay. ¡Hasta pronto!" << std;
     return 0;
 }

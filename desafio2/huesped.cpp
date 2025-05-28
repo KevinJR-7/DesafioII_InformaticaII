@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "huesped.h"
+#include "idManager.h"
 
 // Constructor por defecto
 Huesped::Huesped() : antiguedad(0), puntuacion(0)
@@ -81,8 +82,7 @@ void Huesped::setReservas(const Reserva reservas[])     // asegurar tamaño del 
 }
 
 // Métodos adicionales
-short Huesped::reservar(Alojamiento& alojamiento, unsigned short codigo,
-    unsigned short num_noches, unsigned int fecha_i, unsigned int fecha_pago)   // fecha pago = fecha hoy
+short Huesped::reservar(Alojamiento& alojamiento, unsigned short num_noches, unsigned int fecha_i, unsigned int fecha_pago)   // fecha pago = fecha hoy
 {
     // Pide datos basicos para la reserva (fecha inicio, numero de días, municipio)
     // Muestra alojamientos que cumplan (itera comparando condiciones) y opción de aplicar filtros
@@ -117,7 +117,7 @@ short Huesped::reservar(Alojamiento& alojamiento, unsigned short codigo,
     }
     if(j == 365){ return -2;}   // no tiene días libres para reservar
 
-    this->getReservas()[i].setCodigo(001100);     // dummy (el código se debe generar)
+    this->getReservas()[i].setCodigo(generarCodigoReserva());     // dummy (el código se debe generar)
     this->getReservas()[i].setComentarios(comentarios);     delete[] comentarios;
     this->getReservas()[i].setFechaInicio(fecha_i);
     this->getReservas()[i].setFechaPago(fecha_pago);
@@ -170,11 +170,11 @@ short Huesped::anularReserva(Anfitrion* const anfitriones[])
         }
     }
     unsigned short alojamiento = this->getReservas()[j].getIdAlojamiento();
-    unsigned short codigo = this->getReservas()[j].getCodigo();
+    unsigned int codigo = this->getReservas()[j].getCodigo();
     //Reserva* pedro = &this->getReservas()[j];//getCodigo();
 
     unsigned short alojamiento_aux = 0;
-    unsigned short codigo_aux = 0;
+    unsigned int codigo_aux = 0;
 
     if(anfitriones[0]->getId() == 0){ return -1; }
     for(unsigned short i = 0; i < 2000; i++)
