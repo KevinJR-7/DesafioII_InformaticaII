@@ -216,7 +216,7 @@ void cargarDatos() {
                 // Para la lista de códigos de reserva, Huesped necesita un setter que acepte const char*
                 // y que internamente maneje esta cadena. El setter actual setReservas(const Reserva[]) no es compatible.
                 // Usaremos un nombre placeholder; debes implementar este setter en Huesped.
-                if (std::getline(ss_linea, campo)) { tempHuesped.setReservasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
+                // if (std::getline(ss_linea, campo)) { tempHuesped.setReservasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 
                 if (camposLeidos >= 3) { // Ajusta si todos los campos son obligatorios
                     g_huespedes[g_numHuespedes++] = tempHuesped;
@@ -250,7 +250,7 @@ void cargarDatos() {
                 // Para la lista de códigos de alojamiento, Anfitrion necesita un setter que acepte const char*
                 // El setter actual setAlojamientos(const Alojamiento[]) no es compatible.
                 // Usaremos un nombre placeholder; debes implementar este setter en Anfitrion.
-                if (std::getline(ss_linea, campo)) { tempAnfitrion.setAlojamientosComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
+                // if (std::getline(ss_linea, campo)) { tempAnfitrion.setAlojamientosComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 
                 if (camposLeidos >= 3) {
                     g_anfitriones[g_numAnfitriones++] = tempAnfitrion;
@@ -297,10 +297,10 @@ void cargarDatos() {
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setPrecio(std::stoul(campo)); camposLeidos++; }
                 // Para amenidades, Alojamiento necesita un setter que acepte const char*
                 // El setter actual setAmenidades(const bool[]) no es compatible.
-                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setAmenidadesComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
+                // if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setAmenidadesComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 // Para la lista de códigos de reserva, Alojamiento necesita un setter que acepte const char*
                 // El setter actual setReservas(Reserva* const[]) no es compatible.
-                if (std::getline(ss_linea, campo)) { tempAlojamiento.setReservasAsociadasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
+                // if (std::getline(ss_linea, campo)) { tempAlojamiento.setReservasAsociadasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 
                 if (camposLeidos >= 9) { // Ajusta
                     g_alojamientos[g_numAlojamientos++] = tempAlojamiento;
@@ -373,4 +373,50 @@ void cargarDatos() {
     
 
     
+}
+
+bool sonIdentificadoresIguales(const char* id1, const char* id2) {
+    if (!id1 || !id2) { // Manejar punteros nulos si es posible que ocurran
+        return id1 == id2; // Ambos nulos son "iguales", uno nulo y otro no, son diferentes
+    }
+    int i = 0;
+    while (id1[i] != '\0' && id2[i] != '\0') {
+        if (id1[i] != id2[i]) {
+            return false; // Caracteres diferentes
+        }
+        i++;
+    }
+    // Si el bucle termina, son iguales si ambos han llegado al terminador nulo al mismo tiempo.
+    return (id1[i] == '\0' && id2[i] == '\0');
+}
+
+
+
+Huesped* iniciarSesionHuesped() {
+    char idIngresado[21]; 
+    leerEntradaTexto("Ingrese su ID de huésped: ", idIngresado, sizeof(idIngresado));
+
+    for (unsigned int i = 0; i < g_numHuespedes; ++i) {
+        
+        if (sonIdentificadoresIguales(g_huespedes[i].getId(), idIngresado)) { 
+            std::cout << "Inicio de sesión exitoso como huésped." << std::endl;
+            return &g_huespedes[i]; 
+        }
+    }
+    std::cout << "ID de huésped no encontrado." << std::endl;
+    return nullptr; // No se encontró el huésped
+}
+
+Anfitrion* iniciarSesionAnfitrion() {
+    char idIngresado[21]; 
+    leerEntradaTexto("Ingrese su ID de anfitrión: ", idIngresado, sizeof(idIngresado));
+
+    for (unsigned int i = 0; i < g_numAnfitriones; ++i) {
+        if (sonIdentificadoresIguales(g_anfitriones[i].getId(), idIngresado)) { 
+            std::cout << "Inicio de sesión exitoso como anfitrión." << std::endl;
+            return &g_anfitriones[i]; // Devuelve un puntero al anfitrión encontrado
+        }
+    }
+    std::cout << "ID de anfitrión no encontrado." << std::endl;
+    return nullptr; // No se encontró el anfitrión
 }

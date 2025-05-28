@@ -9,6 +9,7 @@
 void reservarAlojamiento(Huesped* huespedActual) {
     std::cout << "\n--- Reservar Alojamiento ---" << std::endl;
     
+    
 
     }
     
