@@ -3,7 +3,7 @@
 
 class Reserva {
 private:
-    unsigned short codigo;      // código de la reserva
+    unsigned int codigo;      // código de la reserva sficiente todos los clientes en todo el ano
     unsigned short alojamiento; // id alojamiento
     char* huesped;           // cc o passport number (en emiratos 15char)
     unsigned short num_noches;  // Duración de la estancia
@@ -33,7 +33,7 @@ public:
     const char* getComentarios() const;
 
     // Setters
-    void setCodigo(unsigned short codigo);
+    void setCodigo(unsigned int codigo);
     void setIdAlojamiento(unsigned short alojamiento);
     void setIdHuesped(const char huesped[]);
     void setNumNoches(unsigned short num_noches);

@@ -6,7 +6,7 @@
 class Administrador{
 private:
     Anfitrion** anfitriones;    // en airbnb hay aprox 2000 anfitriones
-    //Huesped** huespedes;      //
+    //Huesped** huespedes;      // en airbnb hay aprox 54.700 huespedes interesandos en antioquia
     unsigned short indice;      // indice en proximo anfitrión vacío
     unsigned int fecha_hoy;     // AAAA/MM/DD
 

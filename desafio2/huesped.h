@@ -32,8 +32,7 @@ public:
     void setReservas(const Reserva reservas[]);
 
     // Métodos adicionales
-    short reservar(Alojamiento& alojamiento, unsigned short codigo,
-        unsigned short num_noches, unsigned int fecha_i, unsigned int fecha_pago);
+    short reservar(Alojamiento& alojamiento, unsigned short num_noches, unsigned int fecha_i, unsigned int fecha_pago);
     short anularReserva(Anfitrion* const anfitriones[]);
 };
 
