@@ -14,4 +14,4 @@ void actualizarHistorico(Anfitrion* anfitrionActual);
 void menuHuesped(Huesped* huespedActual);
 void menuAnfitrion(Anfitrion* anfitrionActual);
 
-#endif // MENU_H
+#endif // INTERFAZ_H
