@@ -1,0 +1,1 @@
+numero_documento|antiguedad_meses|puntuacion(0.0-5.0)|alojamientos_administrados(id_aloj1;id_aloj2;...)

@@ -1,0 +1,1 @@
+codigo_reserva|codigo_alojamiento|documento_huesped|fecha_entrada_DDMMYYYY|duracion_noches|metodo_pago(PSE/TCredito)|fecha_pago_DDMMYYYY|monto|anotaciones_huesped
