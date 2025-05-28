@@ -1,0 +1,1 @@
+codigo_identificador|nombre_alojamiento|id_anfitrion|departamento|municipio|tipo(CASA/APARTAMENTO)|direccion|precio_por_noche|amenidades(amenidad1;amenidad2;...)|reservas_asociadas(id_res1;id_res2;...)
