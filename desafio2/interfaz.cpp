@@ -9,7 +9,6 @@
 void reservarAlojamiento(Huesped* huespedActual) {
     std::cout << "\n--- Reservar Alojamiento ---" << std::endl;
     
-    // Falta codigo para Reservar Alojamiento
 
     }
     
@@ -33,13 +32,14 @@ void actualizarHistorico(Anfitrion* anfitrionActual) {
 
 // --- Implementaciones de Menús Específicos por Rol ---
 void menuHuesped(Huesped* huespedActual) {
-    int opcion;
+    short int opcion;
     do {
         std::cout << "\n--- Menú Huésped (" << huespedActual->getId() << ") ---" << std::endl;
         std::cout << "1. Reservar Alojamiento" << std::endl;
         std::cout << "2. Anular Reservación Propia" << std::endl;
         std::cout << "0. Cerrar Sesión" << std::endl;
-        opcion = leerEntradaInt("Seleccione una opción: "); //Implementar leerEntradaInt en sistema.h
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcion;
 
         switch (opcion) {
             case 1:
@@ -65,7 +65,9 @@ void menuAnfitrion(Anfitrion* anfitrionActual) {
         std::cout << "2. Consultar Reservaciones" << std::endl;
         std::cout << "3. Actualizar Histórico de Reservas" << std::endl;
         std::cout << "0. Cerrar Sesión" << std::endl;
-        opcion = leerEntradaInt("Seleccione una opción: "); //Implementar leerEntradaInt en sistema.h
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcion;
+
 
         switch (opcion) {
             case 1:
