@@ -93,7 +93,12 @@ short Huesped::reservar(Alojamiento& alojamiento, unsigned short num_noches, uns
     bool pago;
     char* comentarios = new char[1001];
     // recibe si tarjeta o que
-    pago = true;    // dummy
+    unsigned short num;
+    // muestra las dos opciones con un número cada una y recibe si uno o dos
+    // std::cin >> num;
+    num = 2;   // dummy
+    num--;
+    pago = num;
     // recibe comentarios
     // std::cout << "Ingrese su comentario (máx. 1000 caracteres): ";    // dummy
     // std::cin.getline(comentarios, 1001);    // dummy
@@ -117,7 +122,7 @@ short Huesped::reservar(Alojamiento& alojamiento, unsigned short num_noches, uns
     }
     if(j == 365){ return -2;}   // no tiene días libres para reservar
 
-    this->getReservas()[i].setCodigo(generarCodigoReserva());     // dummy (el código se debe generar)
+    this->getReservas()[i].setCodigo(generarCodigoReserva());
     this->getReservas()[i].setComentarios(comentarios);     delete[] comentarios;
     this->getReservas()[i].setFechaInicio(fecha_i);
     this->getReservas()[i].setFechaPago(fecha_pago);
@@ -133,7 +138,6 @@ short Huesped::reservar(Alojamiento& alojamiento, unsigned short num_noches, uns
 
 short Huesped::anularReserva(Anfitrion* const anfitriones[])
 {
-    // muestra por consola al usuario todas las reservas de este huesped (iterar reservas)
     unsigned int fecha_aux = 00000000;
     unsigned short cnt = 0;
 
