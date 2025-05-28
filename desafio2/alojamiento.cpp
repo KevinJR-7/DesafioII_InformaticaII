@@ -103,7 +103,7 @@ const char* Alojamiento::getDireccion() const { return direccion; }
 unsigned int Alojamiento::getPrecio() const { return precio; }
 const bool* Alojamiento::getAmenidades() const { return amenidades; }
 const bool* Alojamiento::getFechas() const { return fechas; }
-const Reserva* const* Alojamiento::getReservas() const { return reservas; }
+Reserva** Alojamiento::getReservas() { return reservas; }
 
 // Setters
 void Alojamiento::setNombre(const char nombre[])

@@ -2,6 +2,7 @@
 #define HUESPED_H
 
 #include "reserva.h"
+#include "administrador.h"
 
 class Huesped {
 private:
@@ -22,7 +23,7 @@ public:
     const char* getId() const;
     unsigned short getAntiguedad() const;
     unsigned short getPuntuacion() const;
-    const Reserva* getReservas() const;
+    Reserva* getReservas();
 
     // Setters
     void setId(const char id[]);
@@ -31,8 +32,8 @@ public:
     void setReservas(const Reserva reservas[]);
 
     // Métodos adicionales
-    unsigned short reservar();
-    unsigned short anularReserva();
+    short reservar(Alojamiento& alojamiento, unsigned short num_noches, unsigned int fecha_i, unsigned int fecha_pago);
+    short anularReserva(Anfitrion* const anfitriones[]);
 };
 
 #endif // HUESPED_H
