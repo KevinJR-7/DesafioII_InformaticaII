@@ -45,7 +45,11 @@ float leerEntradaFloat(const char* mensaje);
 void leerEntradaTexto(const char* mensaje, char* bufferDestino, int bufferSize, bool permitirVacio = false);
 bool leerEntradaBool(const char* mensaje, const char* opcionVerdadera = "S", const char* opcionFalsa = "N");
 unsigned int leerEntradaFecha(const char* mensaje); // Devuelve YYYYMMDD
-// void leerEntradaMetodoPago(const char* mensaje, char* bufferDestino, int bufferSize); // Puedes usar leerEntradaBool o esta
+void leerEntradaMetodoPago(const char* mensaje, char* bufferDestino, int bufferSize);
+
+
+Huesped* iniciarSesionHuesped();       // Devuelve un puntero al Huesped si es exitoso, nullptr si no
+Anfitrion* iniciarSesionAnfitrion(); // Devuelve un puntero al Anfitrion si es exitoso, nullptr si no
 
 
 #endif // SISTEMA_H

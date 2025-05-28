@@ -24,18 +24,16 @@ int main() {
 
         switch (opcionPrincipal) {
             case 1:
-                huespedLogueado = iniciarSesionHuesped();  // Hay que crear esta función
-                // iniciarSesionHuesped() debe retornar un objeto Huesped o nullptr
+                huespedLogueado = iniciarSesionHuesped();  
                 if (huespedLogueado) {
                     menuHuesped(huespedLogueado); // Hay que crear esta función
 
                 }
                 break;
             case 2:
-                anfitrionLogueado = iniciarSesionAnfitrion(); // Hay que crear esta función
-                // iniciarSesionAnfitrion() debe retornar un objeto Anfitrion o nullptr
+                anfitrionLogueado = iniciarSesionAnfitrion(); 
                 if (anfitrionLogueado) {
-                    menuAnfitrion(anfitrionLogueado); // Hay que crear esta función
+                    menuAnfitrion(anfitrionLogueado); 
                 }
                 break;
             case 0:
@@ -47,7 +45,7 @@ int main() {
         }
     } while (opcionPrincipal != 0);
 
-    guardarDatos(); // Funcionalidad I (Hay que crearla)
+    //guardarDatos(); // Funcionalidad I (Hay que crearla)
                     // Guardar los datos antes de salir del sistema
 
     std::cout << "Gracias por usar UdeAStay. ¡Hasta pronto!" << std::endl;
