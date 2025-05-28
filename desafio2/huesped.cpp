@@ -171,7 +171,6 @@ short Huesped::anularReserva(Anfitrion* const anfitriones[])
     }
     unsigned short alojamiento = this->getReservas()[j].getIdAlojamiento();
     unsigned int codigo = this->getReservas()[j].getCodigo();
-    //Reserva* pedro = &this->getReservas()[j];//getCodigo();
 
     unsigned short alojamiento_aux = 0;
     unsigned int codigo_aux = 0;
@@ -191,10 +190,8 @@ short Huesped::anularReserva(Anfitrion* const anfitriones[])
                     codigo_aux = anfitriones[i]->getAlojamientos()[j].getReservas()[k]->getCodigo();
                     if(codigo_aux == codigo)
                     {
-                        //Reserva* juan = anfitriones[i]->getAlojamientos()[j].getReservas()[k];
                         anfitriones[i]->getAlojamientos()[j].getReservas()[k] = nullptr;
                         this->getReservas()[j].resetReserva();
-                        //juan = anfitriones[i]->getAlojamientos()[j].getReservas()[k];
                         return 0;
                     }
                 }
