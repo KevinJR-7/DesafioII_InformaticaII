@@ -213,8 +213,11 @@ void cargarDatos() {
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempHuesped.setId(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempHuesped.setAntiguedad(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempHuesped.setPuntuacion(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; } 
+                // Para la lista de códigos de reserva, Huesped necesita un setter que acepte const char*
+                // y que internamente maneje esta cadena. El setter actual setReservas(const Reserva[]) no es compatible.
+                // Usaremos un nombre placeholder; debes implementar este setter en Huesped.
+                if (std::getline(ss_linea, campo)) { tempHuesped.setReservasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 
-                // Hace falta un setter en Huesped que acepte una cadena de códigos de reservas
                 if (camposLeidos >= 3) { // Ajusta si todos los campos son obligatorios
                     g_huespedes[g_numHuespedes++] = tempHuesped;
                 } else {
@@ -244,10 +247,10 @@ void cargarDatos() {
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAnfitrion.setId(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAnfitrion.setAntiguedad(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAnfitrion.setPuntuacion(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; } // Clase usa unsigned short
-
-
-                
-                // Hace falta un setter en Anfitrion que acepte una cadena de códigos de alojamientos
+                // Para la lista de códigos de alojamiento, Anfitrion necesita un setter que acepte const char*
+                // El setter actual setAlojamientos(const Alojamiento[]) no es compatible.
+                // Usaremos un nombre placeholder; debes implementar este setter en Anfitrion.
+                if (std::getline(ss_linea, campo)) { tempAnfitrion.setAlojamientosComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 
                 if (camposLeidos >= 3) {
                     g_anfitriones[g_numAnfitriones++] = tempAnfitrion;
@@ -292,9 +295,12 @@ void cargarDatos() {
                 }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setDireccion(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setPrecio(std::stoul(campo)); camposLeidos++; }
-                
-                //Hace falta un setter en Alojamiento que acepte una cadena de amenidades
-                // Hace falta un setter en Alojamiento que acepte una cadena de reservas asociadas
+                // Para amenidades, Alojamiento necesita un setter que acepte const char*
+                // El setter actual setAmenidades(const bool[]) no es compatible.
+                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setAmenidadesComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
+                // Para la lista de códigos de reserva, Alojamiento necesita un setter que acepte const char*
+                // El setter actual setReservas(Reserva* const[]) no es compatible.
+                if (std::getline(ss_linea, campo)) { tempAlojamiento.setReservasAsociadasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
                 
                 if (camposLeidos >= 9) { // Ajusta
                     g_alojamientos[g_numAlojamientos++] = tempAlojamiento;
@@ -312,7 +318,7 @@ void cargarDatos() {
     }
 
     // --- 4. Cargar Reservas (Vigentes e Históricas) ---
-    auto cargarArchivoReservas = [&](const char* nombreArchivoFS, Reserva* arrayReservas, int& contadorReservas, int maxReservasFS, const std::string& tipoReservaStr) {
+    auto cargarArchivoReservas = [&](const char* nombreArchivoFS, Reserva* arrayReservas, unsigned int& contadorReservas, unsigned int maxReservasFS, const std::string& tipoReservaStr) {
         std::ifstream archivoFS(nombreArchivoFS);
         if (archivoFS.is_open()) {
             std::string lineaFS, campoFS;
@@ -359,6 +365,12 @@ void cargarDatos() {
         }
     };
 
+    
+    cargarArchivoReservas(RESERVAS_VIGENTES_FILE_PATH, g_reservasVigentes, g_numReservasVigentes, MAX_RESERVAS, "vigentes");
+    
+
+    cargarArchivoReservas(RESERVAS_HISTORICAS_FILE_PATH, g_reservasHistoricas, g_numReservasHistoricas, MAX_RESERVAS, "históricas");
+    
 
     
 }

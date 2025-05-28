@@ -13,7 +13,7 @@
 const int MAX_HUESPEDES = 100;
 const int MAX_ANFITRIONES = 50;
 const int MAX_ALOJAMIENTOS = 200;
-const int MAX_RESERVAS = 500; // Para vigentes e históricas, ajusta si son separadas
+const int MAX_RESERVAS = 500; 
 
 // --- Declaraciones de Variables Globales (extern) ---
 // Estas serán definidas en sistema.cpp

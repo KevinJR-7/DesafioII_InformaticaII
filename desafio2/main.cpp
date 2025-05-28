@@ -7,16 +7,18 @@
 #include <iostream>
 #include "sistema.h"  // Para cargarDatos, guardarDatos, iniciarSesionHuesped, iniciarSesionAnfitrion, etc.
 #include "interfaz.h" // Para los menús de Huesped y Anfitrión
-using namespace std;
 int main() {
     cargarDatos(); // Funcionalidad I (No debe verla el usuario, solo se carga al inicio)
                     //Hay que crearla
     int opcionPrincipal;
+    Huesped* huespedLogueado = nullptr; // Inicializar como nullptr
+    Anfitrion* anfitrionLogueado = nullptr; // Inicializar como nullptr
+
     do {
-        cout << "\n========= UdeAStay Plataforma =========" << std;
-        cout << "1. Iniciar Sesión como Huésped" << std;
-        cout << "2. Iniciar Sesión como Anfitrión" << std;
-        cout << "0. Salir del Sistema" << std;
+        std::cout << "\n========= UdeAStay Plataforma =========" << std::endl;
+        std::cout << "1. Iniciar Sesión como Huésped" << std::endl;
+        std::cout << "2. Iniciar Sesión como Anfitrión" << std::endl;
+        std::cout << "0. Salir del Sistema" << std::endl;
         opcionPrincipal = leerEntradaInt("Seleccione una opción: ");
 
 
@@ -37,19 +39,17 @@ int main() {
                 }
                 break;
             case 0:
-                std::cout << "Saliendo del sistema UdeAStay..." << std;
+                std::cout << "Saliendo del sistema UdeAStay..." << std::endl;
                 break;
             default:
-                std::cout << "Opción no válida. Intente de nuevo." << std;
-                // Mostrar medición de recursos incluso para opción inválida si se desea
-                // iteracionesGlobales = 1; // Por la comparación de la opción
-                // mostrarMedicionRecursos();
+                std::cout << "Opción no válida. Intente de nuevo." << std::endl;
+                
         }
     } while (opcionPrincipal != 0);
 
     guardarDatos(); // Funcionalidad I (Hay que crearla)
                     // Guardar los datos antes de salir del sistema
 
-    std::cout << "Gracias por usar UdeAStay. ¡Hasta pronto!" << std;
+    std::cout << "Gracias por usar UdeAStay. ¡Hasta pronto!" << std::endl;
     return 0;
 }
