@@ -1,6 +1,8 @@
 #include "anfitrion.h"
 #include <iostream>
 
+#include "idManager.h"
+
 // Constructor
 Anfitrion::Anfitrion() : antiguedad(0), puntuacion(0)
 {
@@ -180,8 +182,41 @@ short Anfitrion::consultarReservas(unsigned int fecha_i, unsigned int fecha_f) c
     else{ return 0; }
 }
 
-short Anfitrion::actualizarHistorico(unsigned int &fecha) const
+// por probar
+short Anfitrion::actualizarHistorico(Anfitrion* const anfitriones[], unsigned int &fecha_actual, unsigned int fecha_nueva) const
 {
-    // tengo sueño, luego pienso el paso a paso de este método
-    return 0;
+    // compara que fecha nueva para ver si es mayor que fecha actual
+    if(fecha_nueva < fecha_actual){ return -1; }
+    fecha_actual = fecha_nueva;
+
+    unsigned int fecha_i_aux = 0;
+    unsigned short num_noches_aux = 0;
+    unsigned int fecha_f_aux = 0;
+    unsigned int cnt = 0;
+
+    if(anfitriones[0]->getId() == 0){ return -2; }
+    for(unsigned short i = 0; i < 2000; i++)
+    {
+        if(anfitriones[i]->getId() == 0){ break; }
+        for(unsigned short j = 0; j < 50; j++)
+        {
+            if(anfitriones[i]->getAlojamientos()[j].getId() == 0){ break; }
+            for(unsigned short k = 0; k < 365; k++)
+            {
+                fecha_i_aux = anfitriones[i]->getAlojamientos()[j].getReservas()[k]->getFechaInicio();
+                num_noches_aux = anfitriones[i]->getAlojamientos()[j].getReservas()[k]->getNumNoches();
+                fecha_f_aux = fechaFinal(fecha_i_aux, num_noches_aux);
+                if(fecha_f_aux < fecha_actual)
+                {
+                    cnt++;
+                    // escribe en el final del archivo
+                    // escribirHistorico(anfitriones[i]->getAlojamientos()[j].getReservas()[j])
+                    anfitriones[i]->getAlojamientos()[j].getReservas()[j]->resetReserva();
+                    anfitriones[i]->getAlojamientos()[j].getReservas()[j] = nullptr;
+                }
+            }
+        }
+    }
+    if(cnt == 0){ return -3; }
+    else{ return 0; }
 }
