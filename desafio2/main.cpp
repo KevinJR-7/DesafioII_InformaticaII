@@ -1,7 +1,7 @@
 
 /**
  * @file main.cpp
- * @author your name (you@domain.com)
+ * @author Benjamin Ruiz y Kevin Jimenez
  * @brief 
  * @version 0.1
  * @date 2025-05-28
