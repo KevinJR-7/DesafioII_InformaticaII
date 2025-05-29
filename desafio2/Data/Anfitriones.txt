@@ -1,1 +1,4 @@
-numero_documento|antiguedad_meses|puntuacion(0.0-5.0)|alojamientos_administrados(id_aloj1;id_aloj2;...)
+ANF001|60|4.7|1;4
+ANF002|48|4.6|2
+ANF003|24|4.3|3
+ANF004|90|4.8|5

@@ -11,12 +11,9 @@ add_executable(desafio2 main.cpp
     alojamiento.h alojamiento.cpp
     reserva.h reserva.cpp
     administrador.h administrador.cpp
-<<<<<<< HEAD
     interfaz.h interfaz.cpp
-    sistema.h sistema.cpp)
-=======
+    sistema.h sistema.cpp
     idManager.h idManager.cpp)
->>>>>>> 967f4d17e8523468d661eaa86ab8d14e5bc0d91d
 
 include(GNUInstallDirs)
 install(TARGETS desafio2
