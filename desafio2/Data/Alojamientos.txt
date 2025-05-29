@@ -1,1 +1,5 @@
-codigo_identificador|nombre_alojamiento|id_anfitrion|departamento|municipio|tipo(CASA/APARTAMENTO)|direccion|precio_por_noche|amenidades(amenidad1;amenidad2;...)|reservas_asociadas(id_res1;id_res2;...)
+1|Casa Campestre El Reposo|ANF001|Antioquia|Guatapé|CASA|Vereda La Piedra, Finca #5|250000|Piscina;Jacuzzi;Wifi;BBQ|1;4
+2|Apartamento Centro Histórico|ANF002|Bolívar|Cartagena|APARTAMENTO|Calle de la Amargura #10-20|180000|Wifi;Aire Acondicionado;Balcón|2;5
+3|Cabaña Rústica Salento|ANF003|Quindío|Salento|CASA|Vereda Palestina, Lote 8|120000|Chimenea;Vista Panorámica|3
+4|Apartamento Moderno Poblado|ANF001|Antioquia|Medellín|APARTAMENTO|Carrera 43A #10-50, Apto 702|300000|Gimnasio;Seguridad 24H;Parqueadero|6;8;10
+5|Finca Cafetera Manizales|ANF004|Caldas|Manizales|CASA|Vereda El Rosario, Finca La Esperanza|200000|Cafetal;Senderos;Piscina|7;9

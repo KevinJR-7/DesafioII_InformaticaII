@@ -1,1 +1,10 @@
-codigo_reserva|codigo_alojamiento|documento_huesped|fecha_entrada_DDMMYYYY|duracion_noches|metodo_pago(PSE/TCredito)|fecha_pago_DDMMYYYY|monto|anotaciones_huesped
+1|1|1000123456|15072024|3|TCredito|10072024|750000|Reserva para aniversario.
+2|2|1000234567|01082024|5|PSE|28072024|900000|Viaje familiar, necesitamos cuna.
+3|3|1000345678|20092024|2|TCredito|15092024|240000|Escape de fin de semana.
+4|1|1000456789|10102024|7|PSE|05102024|1750000|Vacaciones de descanso.
+5|2|1000123456|05112024|4|TCredito|01112024|720000|Viaje de negocios.
+6|4|1000234567|20122024|10|PSE|15122024|3000000|Estadía de fin de año.
+7|5|1000456789|03012025|6|TCredito|28122024|1200000|Experiencia cafetera.
+8|4|1000567890|15022025|3|PSE|10022025|900000|Visita a la ciudad.
+9|1|1000123456|01032025|2|TCredito|25022025|500000|Escapada rápida.
+10|4|1000567890|10042025|5|PSE|05042025|1500000|Reunión de amigos.
