@@ -2,13 +2,12 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <limits>    // Para std::numeric_limits
-#include <algorithm> // Para std::transform
-#include <stdexcept> // Para std::invalid_argument, std::out_of_range
 
-// --- Definiciones de Variables Globales ---
+
 Huesped g_huespedes[MAX_HUESPEDES];
 unsigned int g_numHuespedes = 0;
+
+std::string g_huespedes_codigos_reservas_str[MAX_HUESPEDES];
 
 Anfitrion g_anfitriones[MAX_ANFITRIONES];
 unsigned int g_numAnfitriones = 0;
@@ -22,13 +21,11 @@ unsigned int g_numReservasVigentes = 0;
 Reserva g_reservasHistoricas[MAX_RESERVAS];
 unsigned int g_numReservasHistoricas = 0;
 
-
-// --- Definición de nombres de archivo ---
-const char* HUESPEDES_FILE_PATH = "Data/huespedes.txt";
-const char* ANFITRIONES_FILE_PATH = "Data/anfitriones.txt";
-const char* ALOJAMIENTOS_FILE_PATH = "Data/alojamientos.txt";
-const char* RESERVAS_VIGENTES_FILE_PATH = "Data/reservas_vigentes.txt";
-const char* RESERVAS_HISTORICAS_FILE_PATH = "Data/reservas_historicas.txt";
+const char* HUESPEDES_FILE_PATH = "Data/Huespedes.txt";
+const char* ANFITRIONES_FILE_PATH = "Data/Anfitriones.txt";
+const char* ALOJAMIENTOS_FILE_PATH = "Data/Alojamientos.txt";
+const char* RESERVAS_VIGENTES_FILE_PATH = "Data/Reservas_Actuales.txt";
+const char* RESERVAS_HISTORICAS_FILE_PATH = "Data/Reservas_Historicas.txt";
 
 
 unsigned int leerEntradaInt(const char* mensaje) {
@@ -36,31 +33,20 @@ unsigned int leerEntradaInt(const char* mensaje) {
     while (true) {
         std::cout << mensaje;
         std::cin >> valor;
-        if (std::cin.good()) { 
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-            return valor;
-        } else {
-            std::cout << "Entrada inválida. Ingrese un número entero. Intente de nuevo." << std::endl;
-            std::cin.clear(); 
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-        }
+        return valor; 
     }
+
 }
+
 
 float leerEntradaFloat(const char* mensaje) {
     float valor;
     while (true) {
         std::cout << mensaje;
         std::cin >> valor;
-        if (std::cin.good()) {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            return valor;
-        } else {
-            std::cout << "Entrada inválida. Ingrese un número (ej: 3.14). Intente de nuevo." << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
+        return valor;
     }
+    
 }
 
 
@@ -79,37 +65,11 @@ void leerEntradaTexto(const char* mensaje, char* bufferDestino, int bufferSize, 
             }
         } else {             std::cout << "Error de entrada o línea demasiado larga. Intente de nuevo." << std::endl;
             std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             
         }
     }
 }
 
-
-bool leerEntradaBool(const char* mensaje, const char* opcionVerdadera, const char* opcionFalsa) {
-    std::string entrada_str;
-    std::string strVerdadera(opcionVerdadera);
-    std::string strFalsa(opcionFalsa);
-    std::transform(strVerdadera.begin(), strVerdadera.end(), strVerdadera.begin(), ::tolower);
-    std::transform(strFalsa.begin(), strFalsa.end(), strFalsa.begin(), ::tolower);
-
-    while (true) {
-        std::cout << mensaje << " (" << opcionVerdadera << "/" << opcionFalsa << "): ";
-        std::cin >> entrada_str; 
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-
-        std::transform(entrada_str.begin(), entrada_str.end(), entrada_str.begin(), ::tolower);
-
-        if (entrada_str == strVerdadera) return true;
-        if (entrada_str == strFalsa) return false;
-        
-        std::cout << "Entrada inválida. Ingrese '" << opcionVerdadera << "' o '" << opcionFalsa << "'." << std::endl;
-        
-        if (std::cin.fail()) {
-            std::cin.clear();
-        }
-    }
-}
 
 
 unsigned int leerEntradaFecha(const char* mensaje) {
@@ -131,8 +91,7 @@ unsigned int leerEntradaFecha(const char* mensaje) {
             }
             if (soloDigitos) {
                 try {
-                    valor = std::stoul(temp_str); // Convertir string a unsigned int
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el resto de la línea
+                    valor = std::stoul(temp_str); 
                     return valor;
                 } catch (const std::out_of_range& oor) {
                     std::cout << "Fecha fuera de rango. Intente de nuevo." << std::endl;
@@ -149,7 +108,6 @@ unsigned int leerEntradaFecha(const char* mensaje) {
         if (std::cin.fail()) {
             std::cin.clear();
         }
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
     }
 }
 
@@ -158,14 +116,10 @@ void leerEntradaMetodoPago(const char* mensaje, char* bufferDestino, int bufferS
     std::string entrada_str;
     while (true) {
         std::cout << mensaje << " (PSE/TCredito): ";
-        std::cin >> entrada_str; 
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+        std::cin >> entrada_str;
 
-        std::string temp_upper = entrada_str;
-        std::transform(temp_upper.begin(), temp_upper.end(), temp_upper.begin(), ::toupper);
-
-        if (temp_upper == "PSE" || temp_upper == "TCREDITO") {
-            std::string valorCanonica = (temp_upper == "PSE") ? "PSE" : "TCredito";
+        if (entrada_str == "PSE" || entrada_str== "TCREDITO") {
+            std::string valorCanonica = (entrada_str == "PSE") ? "PSE" : "TCredito";
             
             
             unsigned int i = 0;
@@ -184,8 +138,19 @@ void leerEntradaMetodoPago(const char* mensaje, char* bufferDestino, int bufferS
         }
     }
 }
-
-// ... (includes y definiciones de variables globales como en la respuesta anterior) ...
+Reserva* encontrarReservaPorCodigo(unsigned int codigoReserva) {
+    for (unsigned int i = 0; i < g_numReservasVigentes; ++i) {
+        if (g_reservasVigentes[i].getCodigo() == codigoReserva) {
+            return &g_reservasVigentes[i];
+        }
+    }
+    for (unsigned int i = 0; i < g_numReservasHistoricas; ++i) {
+        if (g_reservasHistoricas[i].getCodigo() == codigoReserva) {
+            return &g_reservasHistoricas[i];
+        }
+    }
+    return nullptr;
+}
 
 void cargarDatos() {
 
@@ -200,9 +165,7 @@ void cargarDatos() {
     std::string campo;
     const char DELIMITER_PRINCIPAL = '|';
 
-    // --- 1. Cargar Huéspedes ---
-    // Formato esperado: id|antiguedad_meses|puntuacion|lista_codigos_reservas_str
-    archivo.open(HUESPEDES_FILE_PATH); // Asegúrate que HUESPEDES_FILE_PATH esté definido
+    archivo.open(HUESPEDES_FILE_PATH); 
     if (archivo.is_open()) {
         while (g_numHuespedes < MAX_HUESPEDES && std::getline(archivo, linea)) {
             if (linea.empty() || linea[0] == '#') continue;
@@ -213,14 +176,26 @@ void cargarDatos() {
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempHuesped.setId(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempHuesped.setAntiguedad(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempHuesped.setPuntuacion(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; } 
-                // Para la lista de códigos de reserva, Huesped necesita un setter que acepte const char*
-                // y que internamente maneje esta cadena. El setter actual setReservas(const Reserva[]) no es compatible.
-                // Usaremos un nombre placeholder; debes implementar este setter en Huesped.
-                // if (std::getline(ss_linea, campo)) { tempHuesped.setReservasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
-                
-                if (camposLeidos >= 3) { // Ajusta si todos los campos son obligatorios
+                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) {
+                    std::stringstream ss_reservas(campo);std::string subcampo;
+    
+                    Reserva reservas[365];  
+                    int index = 0;
+
+                    while (std::getline(ss_reservas, subcampo, ';') && index < 365) {
+                        unsigned short codigo = static_cast<unsigned short>(std::stoul(subcampo));
+                        Reserva r;
+                        r.setCodigo(codigo);  
+                    reservas[index++] = r;
+                   }
+
+                    tempHuesped.setReservas(reservas);  
+                    camposLeidos++;}
+                if (camposLeidos >= 3) { 
                     g_huespedes[g_numHuespedes++] = tempHuesped;
-                } else {
+                } 
+
+                else {
                     std::cerr << "Advertencia: Línea Huesped malformada: " << linea << std::endl;
                 }
             } catch (const std::exception& e) {
@@ -233,9 +208,7 @@ void cargarDatos() {
         std::cout << "Advertencia: No se pudo abrir " << HUESPEDES_FILE_PATH << std::endl;
     }
 
-    // --- 2. Cargar Anfitriones ---
-    // Formato esperado: id|antiguedad_meses|puntuacion|lista_codigos_alojamientos_str
-    archivo.open(ANFITRIONES_FILE_PATH); // Asegúrate que ANFITRIONES_FILE_PATH esté definido
+    archivo.open(ANFITRIONES_FILE_PATH); 
     if (archivo.is_open()) {
         while (g_numAnfitriones < MAX_ANFITRIONES && std::getline(archivo, linea)) {
 
@@ -247,11 +220,22 @@ void cargarDatos() {
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAnfitrion.setId(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAnfitrion.setAntiguedad(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAnfitrion.setPuntuacion(static_cast<unsigned short>(std::stoul(campo))); camposLeidos++; } // Clase usa unsigned short
-                // Para la lista de códigos de alojamiento, Anfitrion necesita un setter que acepte const char*
-                // El setter actual setAlojamientos(const Alojamiento[]) no es compatible.
-                // Usaremos un nombre placeholder; debes implementar este setter en Anfitrion.
-                // if (std::getline(ss_linea, campo)) { tempAnfitrion.setAlojamientosComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
-                
+                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) {
+                    std::stringstream ss_alojamientos(campo); std::string subcampo;
+
+                    Alojamiento alojamientos[50];  // Puedes ajustar este tamaño si lo deseas
+                    int index = 0;
+
+                    while (std::getline(ss_alojamientos, subcampo, ';') && index < 50) {
+                        unsigned short idAlojamiento = static_cast<unsigned short>(std::stoul(subcampo));
+                        Alojamiento a;
+                        a.setId(idAlojamiento);  // Asegúrate que Alojamiento tenga este método
+                        alojamientos[index++] = a;
+                    }
+
+                    tempAnfitrion.setAlojamientos(alojamientos);  // Pasa el arreglo a la función
+                    camposLeidos++;
+                }
                 if (camposLeidos >= 3) {
                     g_anfitriones[g_numAnfitriones++] = tempAnfitrion;
                 } else {
@@ -267,9 +251,8 @@ void cargarDatos() {
         std::cout << "Advertencia: No se pudo abrir " << ANFITRIONES_FILE_PATH << std::endl;
     }
 
-    // --- 3. Cargar Alojamientos ---
-    // Formato: id|nombre|id_anfitrion_str|dpto|municipio|tipo_str|direccion|precio|amenidades_str|lista_reservas_asociadas_str
-    archivo.open(ALOJAMIENTOS_FILE_PATH); // Asegúrate que ALOJAMIENTOS_FILE_PATH esté definido
+
+    archivo.open(ALOJAMIENTOS_FILE_PATH); 
     if (archivo.is_open()) {
         while (g_numAlojamientos < MAX_ALOJAMIENTOS && std::getline(archivo, linea)) {
 
@@ -283,26 +266,35 @@ void cargarDatos() {
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setAnfitrion(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setDepartamento(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setMunicipio(campo.c_str()); camposLeidos++; }
-                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { // tipo_str
-                    bool tipo_bool = false; // Default a apartamento
-                    std::string tipo_str_lower = campo;
-                    std::transform(tipo_str_lower.begin(), tipo_str_lower.end(), tipo_str_lower.begin(), ::tolower);
-                    if (tipo_str_lower == "casa") tipo_bool = true;
-                    else if (tipo_str_lower == "apartamento") tipo_bool = false;
-                    // else { std::cerr << "Advertencia: Tipo de alojamiento desconocido '" << campo << "' en línea: " << linea << std::endl; }
+                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { 
+                    bool tipo_bool = false; 
+                    
+                    if (campo == "casa") tipo_bool = true;
+                    else if (campo == "apartamento") tipo_bool = false;
                     tempAlojamiento.setTipo(tipo_bool);
                     camposLeidos++;
                 }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setDireccion(campo.c_str()); camposLeidos++; }
                 if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setPrecio(std::stoul(campo)); camposLeidos++; }
-                // Para amenidades, Alojamiento necesita un setter que acepte const char*
-                // El setter actual setAmenidades(const bool[]) no es compatible.
-                // if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { tempAlojamiento.setAmenidadesComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
-                // Para la lista de códigos de reserva, Alojamiento necesita un setter que acepte const char*
-                // El setter actual setReservas(Reserva* const[]) no es compatible.
-                // if (std::getline(ss_linea, campo)) { tempAlojamiento.setReservasAsociadasComoCadena(campo.c_str()); camposLeidos++; } // ¡NECESITAS ESTE SETTER!
-                
-                if (camposLeidos >= 9) { // Ajusta
+                if (std::getline(ss_linea, campo, DELIMITER_PRINCIPAL)) { 
+                    bool amenidades[6] = {false}; 
+                    std::stringstream ss_amenidades(campo);
+                    std::string subcampo;
+                    int index = 0;
+
+                    while (std::getline(ss_amenidades, subcampo, ';') && index < 10) {
+                        if (subcampo == "true") {
+                            amenidades[index++] = true;
+                        } else if (subcampo == "false") {
+                            amenidades[index++] = false;
+                        } else {
+                            std::cerr << "Advertencia: Amenidad desconocida '" << subcampo << "' en línea: " << linea << std::endl;
+                        }
+                    }
+                    tempAlojamiento.setAmenidades(amenidades);
+                    camposLeidos++;
+                }
+                if (camposLeidos >= 9) { 
                     g_alojamientos[g_numAlojamientos++] = tempAlojamiento;
                 } else {
                     std::cerr << "Advertencia: Línea Alojamiento malformada: " << linea << std::endl;
@@ -317,7 +309,7 @@ void cargarDatos() {
         std::cout << "Advertencia: No se pudo abrir " << ALOJAMIENTOS_FILE_PATH << std::endl;
     }
 
-    // --- 4. Cargar Reservas (Vigentes e Históricas) ---
+
     auto cargarArchivoReservas = [&](const char* nombreArchivoFS, Reserva* arrayReservas, unsigned int& contadorReservas, unsigned int maxReservasFS, const std::string& tipoReservaStr) {
         std::ifstream archivoFS(nombreArchivoFS);
         if (archivoFS.is_open()) {
@@ -329,19 +321,15 @@ void cargarDatos() {
                 Reserva tempReserva;
                 int camposLeidos = 0;
                 try {
-                    // Formato: codigo_r|codigo_a|doc_h|fecha_e|duracion|metodo_p_str|fecha_p|monto|anotaciones
                     if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { tempReserva.setCodigo(std::stoul(campoFS)); camposLeidos++; }
                     if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { tempReserva.setIdAlojamiento(static_cast<unsigned short>(std::stoul(campoFS))); camposLeidos++; }
                     if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { tempReserva.setIdHuesped(campoFS.c_str()); camposLeidos++; }
                     if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { tempReserva.setFechaInicio(std::stoul(campoFS)); camposLeidos++; }
                     if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { tempReserva.setNumNoches(static_cast<unsigned short>(std::stoul(campoFS))); camposLeidos++; }
-                    if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { // metodo_p_str
-                        bool pago_bool = false; // Default a tarjeta (false)
-                        std::string metodo_p_str_upper = campoFS;
-                        std::transform(metodo_p_str_upper.begin(), metodo_p_str_upper.end(), metodo_p_str_upper.begin(), ::toupper);
-                        if (metodo_p_str_upper == "PSE") pago_bool = true;
-                        else if (metodo_p_str_upper == "TCREDITO" || metodo_p_str_upper == "TARJETA") pago_bool = false; // Asumiendo TCredito es tarjeta
-                        // else { std::cerr << "Advertencia: Método de pago desconocido '" << campoFS << "' en línea: " << lineaFS << std::endl; }
+                    if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { 
+                        bool pago_bool = false; 
+                        if (campoFS == "PSE") pago_bool = true;
+                        else if (campoFS == "TCREDITO" || campoFS == "TARJETA") pago_bool = false; 
                         tempReserva.setMetodoPago(pago_bool);
                         camposLeidos++;
                     }
@@ -349,7 +337,7 @@ void cargarDatos() {
                     if (std::getline(ss_linea_res, campoFS, DELIMITER_PRINCIPAL)) { tempReserva.setPrecio(std::stoul(campoFS)); camposLeidos++; }
                     if (std::getline(ss_linea_res, campoFS)) { tempReserva.setComentarios(campoFS.c_str()); camposLeidos++; }
 
-                    if (camposLeidos >= 8) { // Ajusta
+                    if (camposLeidos >= 8) { 
                         arrayReservas[contadorReservas++] = tempReserva;
                     } else {
                         std::cerr << "Advertencia: Línea Reserva malformada en " << nombreArchivoFS << ": " << lineaFS << std::endl;
@@ -376,24 +364,24 @@ void cargarDatos() {
 }
 
 bool sonIdentificadoresIguales(const char* id1, const char* id2) {
-    if (!id1 || !id2) { // Manejar punteros nulos si es posible que ocurran
-        return id1 == id2; // Ambos nulos son "iguales", uno nulo y otro no, son diferentes
+    if (!id1 || !id2) { 
+        return id1 == id2; 
     }
     int i = 0;
     while (id1[i] != '\0' && id2[i] != '\0') {
         if (id1[i] != id2[i]) {
-            return false; // Caracteres diferentes
+            return false; 
         }
         i++;
     }
-    // Si el bucle termina, son iguales si ambos han llegado al terminador nulo al mismo tiempo.
+    
     return (id1[i] == '\0' && id2[i] == '\0');
 }
 
 
 
 Huesped* iniciarSesionHuesped() {
-    char idIngresado[21]; 
+    char idIngresado[4]; 
     leerEntradaTexto("Ingrese su ID de huésped: ", idIngresado, sizeof(idIngresado));
 
     for (unsigned int i = 0; i < g_numHuespedes; ++i) {

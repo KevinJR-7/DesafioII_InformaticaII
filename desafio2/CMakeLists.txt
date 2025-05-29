@@ -13,6 +13,7 @@ add_executable(desafio2 main.cpp
     administrador.h administrador.cpp
     interfaz.h interfaz.cpp
     sistema.h sistema.cpp
+    administrador.h administrador.cpp
     idManager.h idManager.cpp)
 
 include(GNUInstallDirs)
